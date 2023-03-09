@@ -39,7 +39,7 @@ app.get("/user", (req, res) => {
 });
 
 app.delete("/user", (req, res) => {
-  usersController.delete(req, res);
+  usersController.remove(req, res);
 });
 
 app.post("/report", (req, res) => {
@@ -55,7 +55,7 @@ app.get("/report", (req, res) => {
 });
 
 app.delete("/report", (req, res) => {
-  reportsController.delete(req, res);
+  reportsController.remove(req, res);
 });
 
 app.get("/allReports", (req, res) => {
