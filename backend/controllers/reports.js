@@ -58,6 +58,27 @@ async function read(req, res) {
         });
 };
 
+async function readAll(req, res) {
+    const rpt_email = req.body.email || "";
+
+    Report.findAll({
+        where: { rpt_email: rpt_email },
+    })
+    .then((data) => {
+      if (data.length < 1 || data == null) {
+        return res.status(200).send({
+          message: "Nenhum relatório encontrado.",
+        });
+      }
+      return res.status(200).send(data);
+    })
+    .catch((err) => {
+      return res.status(500).send({
+        message: "Erro encontrado ao buscar relatórios. " + err.message,
+      });
+    });
+}
+
 async function update(req, res) {
     if (!req.body) {
         return res.status(400).send({
@@ -121,4 +142,4 @@ async function remove(req, res) {
         });
 }
 
-module.exports = { create, read, update, remove };
+module.exports = { create, read, readAll, update, remove };
