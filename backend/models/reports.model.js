@@ -6,10 +6,6 @@ module.exports = (sequelize, Sequelize) => {
       primaryKey: true,
       allowNull: false,
     },
-    rpt_fk_usr_identification: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-    },
     rpt_email: {
       type: Sequelize.STRING,
       unique: true,
