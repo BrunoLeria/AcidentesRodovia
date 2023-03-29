@@ -1,16 +1,18 @@
 <template>
   <v-app>
-    <default-bar v-model:drawer="drawer"/>
-    <navigation-drawer :drawer="drawer"></navigation-drawer>
-    <default-view />
+    <div class="d-flex flex-row mb-6 bg-surface-variant">
+      <default-bar v-model:drawer="drawer" />
+      <div class="d-flex flex-col mb-6 bg-surface-variant">
+        <default-view />
+      </div>
+    </div>
   </v-app>
 </template>
 
 <script lang="ts" setup>
-  import NavigationDrawer from '@/components/NavigationDrawer.vue';
-  import DefaultBar from './AppBar.vue'
-  import DefaultView from './View.vue'
-  import {ref} from 'vue';
+import DefaultBar from './AppBar.vue'
+import DefaultView from './View.vue'
+import { ref } from 'vue';
 
-  const drawer = ref(false);
+const drawer = ref(false);
 </script>

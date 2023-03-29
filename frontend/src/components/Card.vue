@@ -3,5 +3,5 @@
 </script>
 
 <template>
-    <v-card height="200"></v-card>
+    <v-card height="200" class="ma-2 pa-2"></v-card>
 </template>

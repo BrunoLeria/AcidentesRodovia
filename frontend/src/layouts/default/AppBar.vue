@@ -12,8 +12,6 @@ const items = ref([
 
 <template>
   <v-app-bar flat>
-    <v-app-bar-nav-icon color="primary" @click="$emit('update:drawer', !drawer) ">
-    </v-app-bar-nav-icon>
     <v-app-bar-title>
       <v-icon icon="mdi-road-variant"></v-icon>
       Acidentes de rodovia
