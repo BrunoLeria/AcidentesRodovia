@@ -58,8 +58,4 @@ app.delete("/reports", (req, res) => {
   reportsController.remove(req, res);
 });
 
-app.get("/allReports", (req, res) => {
-  reportsController.readAll(req, res);
-});
-
 db.sequelize.sync();
