@@ -26,40 +26,36 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.post("/user", (req, res) => {
+app.post("/users", (req, res) => {
   usersController.create(req, res);
 });
 
-app.put("/user", (req, res) => {
+app.put("/users", (req, res) => {
   usersController.update(req, res);
 });
 
-app.get("/user", (req, res) => {
+app.get("/users", (req, res) => {
   usersController.read(req, res);
 });
 
-app.delete("/user", (req, res) => {
+app.delete("/users", (req, res) => {
   usersController.remove(req, res);
 });
 
-app.post("/report", (req, res) => {
+app.post("/reports", (req, res) => {
   reportsController.create(req, res);
 });
 
-app.put("/report", (req, res) => {
+app.put("/reports", (req, res) => {
   reportsController.update(req, res);
 });
 
-app.get("/report", (req, res) => {
+app.get("/reports", (req, res) => {
   reportsController.read(req, res);
 });
 
-app.delete("/report", (req, res) => {
+app.delete("/reports", (req, res) => {
   reportsController.remove(req, res);
-});
-
-app.get("/allReports", (req, res) => {
-  reportsController.readAll(req, res);
 });
 
 db.sequelize.sync();
