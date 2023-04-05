@@ -13,7 +13,7 @@ const items = ref([
 
 <template>
 	<v-app-bar flat>
-		<v-app-bar-title>
+		<v-app-bar-title @click="router.push({ path: '/' })">
 			<v-icon icon="mdi-road-variant"></v-icon>
 			Acidentes de rodovia
 		</v-app-bar-title>
