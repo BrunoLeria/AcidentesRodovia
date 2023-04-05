@@ -1,0 +1,589 @@
+openapi: 3.0.0
+info:
+  version: v0.0.2
+  title: "SAOITR"
+  description: "Sistema de aviso de ocorrências de interrupção de tráfego em rodovias"
+paths:
+  /users:
+    get:
+      summary: "Realiza o login no sistema"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        200:
+          description: "Login realizado com sucesso"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  token:
+                    type: string
+                required:
+                  - id
+                  - name
+                  - email
+                  - token
+        400:
+          description: "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        401:
+          description: "Essas credenciais não correspondem aos nossos registros."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        500:
+          description: "Erro ao tentar encontrar o usuário no servidor"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+    post:
+      summary: "Realiza o cadastro do usuário no sistema"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - name
+                - email
+                - password
+      responses:
+        201:
+          description: "Cadastro realizado com sucesso"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  password:
+                    type: string
+                  token:
+                    type: string
+                required:
+                  - id
+                  - name
+                  - email
+                  - token
+        400:
+          description: "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        500:
+          description: "Erro ao tentar cadastrar o usuário no servidor"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+    put:
+      summary: "Realiza a atualização do cadastro no sistema"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                token:
+                  type: string
+              required:
+                - id
+                - name
+                - email
+                - password
+                - token
+      responses:
+        200:
+          description: "Atualização do usuário realizada com sucesso"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  token:
+                    type: string
+                required:
+                  - id
+                  - name
+                  - email
+                  - token
+        204:
+          description: "Atualização do usuário realizada com sucesso"
+        400:
+          description: "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        403:
+          description: "Essas credenciais não correspondem aos nossos registros."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        500:
+          description: "Erro ao tentar atualizar o usuário no servidor"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+    delete:
+      summary: "Deleta o cadastro do sistema"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                id:
+                  type: string
+                password:
+                  type: string
+              required:
+                - token
+                - id
+                - password
+      responses:
+        204:
+          description: "Usuário excluido com sucesso"
+        400:
+          description: "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        403:
+          description: "Essas credenciais não correspondem aos nossos registros."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        500:
+          description: "Erro ao tentar excluir o usuário no servidor"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+  /occurrences:
+    get:
+      summary: "Solicita a listagem de todas as ocorrências ou se especificar um id e um token no corpo, o servidor busca as ocorrências de um único usuário."
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                user_id:
+                  type: string
+      responses:
+        200:
+          description: "Sucesso"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ocurrences"
+        400:
+          description: "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        403:
+          description: "Você não tem permissão para acessar esse recurso."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        404:
+          description: "Ocorrências do usuário informado não foram encontradas."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        500:
+          description: "Erro ao tentar buscar as ocorrências no servidor"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+    post:
+      summary: "Realiza o cadastro da ocorrência no sistema"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                time:
+                  type: string
+                local:
+                  type: string
+                occurrence_tipe:
+                  type: string
+                km:
+                  type: integer
+                token:
+                  type: string
+                user_id:
+                  type: string
+              required:
+                - date
+                - time
+                - local
+                - occurrence_tipe
+                - km
+                - token
+                - user_id
+      responses:
+        201:
+          description: "Cadastro da ocorrência realizado com sucesso"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  date:
+                    type: string
+                  time:
+                    type: string
+                  local:
+                    type: string
+                  occurrence_tipe:
+                    type: string
+                  km:
+                    type: integer
+                  token:
+                    type: string
+                  user_id:
+                    type: string
+                required:
+                  - date
+                  - time
+                  - local
+                  - occurrence_tipe
+                  - km
+                  - token
+                  - user_id
+        400:
+          description: "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        500:
+          description: "Erro ao tentar cadastrar a ocorrência no servidor"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+    put:
+      summary: "Realiza a atualização da ocorrência no sistema"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                date:
+                  type: string
+                time:
+                  type: string
+                local:
+                  type: string
+                occurrence_tipe:
+                  type: string
+                km:
+                  type: integer
+                user_id:
+                  type: string
+              required:
+                - token
+                - id
+                - user_id
+      responses:
+        200:
+          description: "Atualização da ocorrência realizada com sucesso"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  id:
+                    type: string
+                  user_id:
+                    type: string
+                required:
+                  - token
+                  - id
+                  - user_id
+        204:
+          description: "Atualização da ocorrência realizada com sucesso"
+        400:
+          description: "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        403:
+          description: "Essas credenciais não correspondem aos nossos registros."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        500:
+          description: "Erro ao tentar atualizar a ocorrência no servidor"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+    delete:
+      summary: "Deleta a ocorrência do sistema"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                id:
+                  type: string
+                user_id:
+                  type: string
+              required:
+                - token
+                - id
+                - user_id
+      responses:
+        204:
+          description: "Ocorrência excluida com sucesso"
+        400:
+          description: "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        403:
+          description: "Essas credenciais não correspondem aos nossos registros."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        500:
+          description: "Erro ao tentar excluir a ocorrência no servidor"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        token:
+          type: string
+    Occurrence:
+      type: object
+      properties:
+        id:
+          type: integer
+        date:
+          type: string
+        time:
+          type: string
+        local:
+          type: string
+        occurrence_type:
+          type: string
+        km:
+          type: integer
+        token:
+          type: string
+        user_id:
+          type: string
+
+    Ocurrences:
+      type: array
+      items:
+        $ref: "#components/schemas/Ocurrence"
