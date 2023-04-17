@@ -37,7 +37,7 @@ export const useUserStore = defineStore("user", {
   getters: {},
   actions: {
     verifyUser(email: string, password: string): IUser | undefined {
-      const user = this.find(
+      const user = this.$state.find(
         (user: IUser) => user.email === email && user.password === password
       );
       return user;
