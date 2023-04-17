@@ -5,9 +5,9 @@ const route = useRoute();
 const router = useRouter();
 const items = ref([
 	{ title: "Login", link: "/login", show: route.params.id !== "" },
-	{ title: "Register", link: "/register", show: true },
-	{ title: "About", link: "/about", show: true },
-	{ title: "Logout", link: "/logout", show: route.params.id === "" }
+	{ title: "Register", link: "/register", show: route.params.id !== "" },
+	{ title: "Logout", link: "/logout", show: route.params.id === "" },
+	{ title: "About", link: "/about", show: true }
 ]);
 </script>
 
@@ -22,10 +22,8 @@ const items = ref([
 			<v-icon>mdi-dots-vertical</v-icon>
 			<v-menu activator="parent">
 				<v-list>
-					<v-list-item v-for="(item, index) in items" :key="index" :value="index">
-						<v-list-item-title @click="router.push({ path: item.link })" v-if="item.show">{{
-							item.title
-						}}</v-list-item-title>
+					<v-list-item v-for="(item, index) in items" :key="index" :value="index" v-show="item.show">
+						<v-list-item-title @click="router.push({ path: item.link })">{{ item.title }}</v-list-item-title>
 					</v-list-item>
 				</v-list>
 			</v-menu>
