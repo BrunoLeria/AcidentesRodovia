@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useUserStore } from "@/store/modules/user";
+import { IUser } from "@/interfaces/user.interface";
 
 const router = useRouter();
+const userStore = useUserStore();
 
 const form = ref(false);
 const email = ref(null);
@@ -19,6 +22,14 @@ function onSubmit() {
 	if (!form) return;
 
 	loading.value = true;
+
+	userStore.verifyUser(email.value, password.value).then((res: IUser | undefined) => {
+		if (res) {
+			router.push({ path: "/" });
+		} else {
+			alert("Usuário não encontrado");
+		}
+	});
 
 	setTimeout(() => (loading.value = false), 2000);
 }
@@ -85,7 +96,7 @@ function required(v: any) {
 								block
 								color="green-darken-4"
 								size="large"
-								type="submit"
+								type="button"
 								variant="elevated">
 								Sign In
 							</v-btn>
