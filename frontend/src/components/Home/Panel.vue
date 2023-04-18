@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Card from "./Card.vue";
-import NavigationDrawer from "@/components/NavigationDrawer.vue";
+import Card from "./Panel/Card.vue";
+import NavigationDrawer from "@/components/Home/Panel/NavigationDrawer.vue";
 </script>
 <template>
 	<div class="d-flex flex-row mb-6 bg-surface-variant">
