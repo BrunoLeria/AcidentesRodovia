@@ -13,6 +13,7 @@
     "@mdi/font": "7.0.96",
     "@vue/test-utils": "^2.0.0-rc.18",
     "core-js": "^3.8.3",
+    "happy-dom": "^9.8.1",
     "jsdom": "^21.1.1",
     "pinia": "^2.0.23",
     "roboto-fontface": "*",
