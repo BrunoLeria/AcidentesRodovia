@@ -57,7 +57,7 @@ async function onSubmit() {
     <v-container>
       <v-row align="center">
         <v-col>
-          <v-btn :disabled="!form" :loading="loading" block color="blue-darken-4" size="large" type="button"
+          <v-btn :loading="loading" block color="blue-darken-4" size="large" type="button"
             @click="router.push({ path: '/register' })" variant="elevated">
             Register
           </v-btn>
