@@ -1,121 +1,197 @@
-const db = require("../models/db.model");
-const User = db.users;
-const Op = db.Sequelize.Op;
-const sequelize = db.sequelize;
-const { QueryTypes } = require("sequelize");
+const { client, users } = require("../database/connection.js");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 // Create and Save a new User
-async function create(req, res)  {
-    // Validate request
-    if (!req.body) {
-        return res.status(400).json({
-            message: err || "Conteúdo não pode estar vazio!",
-        });
-    }
+async function create(req, res) {
+  // Validate request
+  const { name, email, password } = req.body;
+  if (!name || !email || !password) {
+    return res.status(400).json({
+      message:
+        "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente.",
+    });
+  }
 
-    // Create a User
-    await User.create({
-        usr_name: req.body.usr_name,
-        usr_email: req.body.usr_email,
-        usr_password: req.body.usr_password,
-        usr_type: req.body.usr_type,
-        usr_token: req.body.usr_token
-    })
-        .then(() => {
-            return res.status(201);
-        })
-        .catch((err) => {
-            return res.status(500).send({
-                message: "Erro encontrado ao criar usuário novo. " + err.message,
-            });
-        });
-};
+  try {
+    const id = (await users.countDocuments()) + 1;
 
-async function read(req, res) {
-    if (!req.query.email) {
-        return res.status(400).send({ message: "E-mail do usuário não fornecido." });
-    }
-    User.findOne({ where: { usr_email: req.query.email } })
-        .then((data) => {
-            if (!data) {
-                return res.status(406).send({
-                    message: "Usuário não encontrado com e-mail = " + req.query.email,
-                });
-            }
-            return res.status(200).send(data);
-        })
-        .catch((err) => {
-            return res.status(500).send({
-                message:
-                    "Erro ao buscar usuário com e-mail = " +
-                    req.query.email +
-                    ". " +
-                    err.message,
-            });
-        });
-};
+    const newUser = {
+      id: id,
+      name: name,
+      email: email,
+      password: "",
+    };
 
-async function update(req, res) {
-    if (!req.body) {
-        return res.status(400).send({
-          message: "Dados não fornecidos.",
-        });
-      }
-      if (!req.query.email) {
-        return res.status(400).send({
-          message: "E-mail do usuário não fornecido.",
-        });
-      }
-      const email = req.query.email;
-    
-      User.update(req.body, {
-        where: { usr_email: email },
-      })
-        .then((num) => {
-          if (num === 1) {
-            return res.status(200).send({
-              message: "Usuário foi atualizado com sucesso!",
-            });
-          } else {
-            return res.status(406).send({
-              message: `Não foi possível atualizar o usuário com o e-mail = ${email}. Talvez o usuário não exista ou o body veio vazio.`,
-            });
-          }
-        })
-        .catch((err) => {
-          return res.status(500).send({
-            message:
-              "Erro ao atualizar o usuário com o e-mail = " + email + ". " + err.message,
-          });
-        });
-};
+    const salt = await bcrypt.genSalt(10);
+    newUser.password = await bcrypt.hash(password, salt);
 
-async function remove(req, res) {
-    if (!req.query.email) {
-        return res.status(400).send({
-          message: "Email do usuário não fornecido.",
-        });
-      }
-      const email = req.query.email;
-    
-      User.destroy({
-        where: { usr_email: email },
-      })
-        .then((num) => {
-          if (num === 1) {
-            return res.status(204);
-          } else {
-            return res.status(406).send({
-              message: `Não foi possível deletar o usuário com e-mail = ${email}. Talvez o usuário não exista.`,
-            });
-          }
-        })
-        .catch((err) => {
-          return res.status(500).send({
-            message:
-              "Erro ao deletar o usuário com o e-mail = " + email + ". " + err.message,
-          });
-        });
+    await users.insertOne(newUser).then(() => {
+      return res.status(201).send({
+        id: id,
+        name: name,
+        email: email,
+      });
+    });
+
+    console.log("Usuário cadastrado com sucesso!");
+  } catch (err) {
+    return res.status(500).send({
+      message: "Erro ao tentar cadastrar o usuário no servidor. " + err.message,
+    });
+  }
 }
 
-module.exports = { create, read, update, remove };
+async function find(req, res) {
+  const { id } = req.query;
+  if (!id) {
+    return res.status(400).send({
+      message:
+        "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente.",
+    });
+  }
+  try {
+    const query = { id: id };
+    const user = users.findOne(query);
+
+    if (!user) {
+      return res.status(403).send({
+        message: "Essas credenciais não correspondem aos nossos registros.",
+      });
+    }
+    return res.status(200).send(user);
+  } catch (err) {
+    return res.status(500).send({
+      message: "Erro ao tentar encontrar o usuário no servidor" + err.message,
+    });
+  }
+}
+
+async function login(req, res) {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({
+        message:
+          "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente.",
+      });
+    }
+
+    let user = await users.findOne({ email }).select("+password");
+    if (!user) {
+      return res.status(401).json({
+        message: "Essas credenciais não correspondem aos nossos registros.",
+      });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({
+        message: "Essas credenciais não correspondem aos nossos registros.",
+      });
+    }
+
+    jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: 3600 },
+      (err, token) => {
+        if (err) throw err;
+        res.status(200).json({
+          token: token,
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+          },
+        });
+      }
+    );
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      message: "Erro ao tentar encontrar o usuário no servidor" + err.message,
+    });
+  }
+}
+
+async function update(req, res) {
+  // Validate request
+  const { id } = req.query;
+  if (!id) {
+    return res.status(400).send({
+      message:
+        "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente.",
+    });
+  }
+
+  const { name, email, password } = req.body;
+  if (!name || !email || !password) {
+    return res.status(400).json({
+      message:
+        "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente.",
+    });
+  }
+
+  try {
+    // create a filter for a movie to update
+    const filter = { id: id };
+    // this option instructs the method to create a document if no documents match the filter
+    const options = { upsert: true };
+    // create a document that sets the plot of the movie
+    const updateDoc = {
+      $set: {
+        name: name,
+        email: email,
+        password: password,
+      },
+    };
+    const result = await users.updateOne(filter, updateDoc, options);
+
+    console.log(result);
+    // if (num === 1) {
+    //     return res.status(200).send({
+    //       message: "Atualização do usuário realizada com sucesso",
+    //     });
+    //   } else {
+    //     return res.status(403).send({
+    //       message: "Essas credenciais não correspondem aos nossos registros.",
+    //     });
+    //   }
+  } catch (err) {
+    return res.status(500).send({
+      message: "Erro ao tentar atualizar o usuário no servidor" + err.message,
+    });
+  }
+}
+
+async function remove(req, res) {
+  const { id } = req.query;
+  if (!id) {
+    return res.status(400).send({
+      message:
+        "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente.",
+    });
+  }
+
+  try {
+    // Query for a movie that has title "Annie Hall"
+    const query = { id: id };
+    const result = await users.deleteOne(query);
+    if (result.deletedCount === 1) {
+      return res.status(200).send({
+        message: "Usuário excluido com sucesso",
+      });
+    } else {
+      return res.status(403).send({
+        message: "Essas credenciais não correspondem aos nossos registros.",
+      });
+    }
+  } catch (err) {
+    return res.status(500).send({
+      message: "Erro ao tentar excluir o usuário no servidor" + err.message,
+    });
+  }
+}
+
+module.exports = { create, find, login, update, remove };
