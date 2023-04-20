@@ -31,7 +31,7 @@ async function onSubmit() {
     if (response) {
       const result = await userStore.login(email.value, password.value);
       loading.value = false;
-      if (result) router.push({ path: "/" });
+      if (result) router.push({ name: "Home" });
     }
   });
 }

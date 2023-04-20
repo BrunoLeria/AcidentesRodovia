@@ -25,7 +25,7 @@ async function onSubmit() {
 
   const result = await userStore.login(email.value, password.value);
   loading.value = false;
-  if (result) router.push({ path: "/" });
+  if (result) router.push({ name: "Home" });
 }
 </script>
 
@@ -51,7 +51,7 @@ async function onSubmit() {
       <v-row align="center">
         <v-col>
           <v-btn :loading="loading" block color="blue-darken-4" size="large" type="button"
-            @click="router.push({ path: '/register' })" variant="elevated">
+            @click="router.push({ name: 'Register' })" variant="elevated">
             Register
           </v-btn>
         </v-col>

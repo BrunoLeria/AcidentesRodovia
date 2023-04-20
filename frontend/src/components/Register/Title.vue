@@ -8,7 +8,7 @@ const router = useRouter();
   <v-container>
     <v-row>
       <v-col>
-        <v-btn icon="mdi-arrow-left-thin" @click="router.push({ path: '/' })"></v-btn>
+        <v-btn icon="mdi-arrow-left-thin" @click="router.push({ name: 'Home' })"></v-btn>
       </v-col>
       <v-col>
         <h1 class="text-center mb-6">Registro</h1>

@@ -5,16 +5,16 @@ import { ref } from "vue";
 const router = useRouter();
 const userStore = useUserStore();
 const items = ref([
-	{ title: "Login", function: router.push({ path: "/login" }), show: userStore.token === "" },
-	{ title: "Register", function: router.push({ path: "/register" }), show: userStore.token === "" },
+	{ title: "Login", function: router.push({ name: "Login" }), show: userStore.token === "" },
+	{ title: "Register", function: router.push({ name: "Register" }), show: userStore.token === "" },
 	{ title: "Logout", function: userStore.logout(), show: userStore.token !== "" },
-	{ title: "About", function: router.push({ path: "/about" }), show: true }
+	{ title: "About", function: router.push({ name: "About" }), show: true }
 ]);
 </script>
 
 <template>
 	<v-app-bar flat>
-		<v-app-bar-title @click="router.push({ path: '/' })">
+		<v-app-bar-title @click="router.push({ name: 'Home' })">
 			<v-icon icon="mdi-road-variant"></v-icon>
 			Acidentes de rodovia
 		</v-app-bar-title>
