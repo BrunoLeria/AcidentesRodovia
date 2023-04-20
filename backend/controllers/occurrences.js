@@ -76,15 +76,17 @@ async function update(req, res) {
   try {
     // create a filter for a occurrence to update
     const filter = { id: parseInt(id) };
-
     const oldOccurrence = await occurrences.findOne(filter);
-
+    const { local, occurrence_tipe, km } = req.body;
     // create a document that sets the plot of the movie
     const updateDoc = {
       $set: {
-        local: local || oldOccurrence.local,
-        occurrence_tipe: occurrence_tipe || oldOccurrence.occurrence_tipe,
-        km: km || oldOccurrence.km,
+        local: local === "" ? oldOccurrence.local : local,
+        occurrence_tipe:
+          occurrence_tipe === ""
+            ? oldOccurrence.occurrence_tipe
+            : occurrence_tipe,
+        km: km === "" ? oldOccurrence.km : km,
       },
     };
     const result = await occurrences.updateOne(filter, updateDoc);
@@ -120,7 +122,7 @@ async function remove(req, res) {
     const result = await occurrences.deleteOne(query);
     if (result.deletedCount === 1) {
       return res.status(200).send({
-        message: "Usuário excluido com sucesso",
+        message: "Ocorrência excluida com sucesso",
       });
     } else {
       return res.status(403).send({
