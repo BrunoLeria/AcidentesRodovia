@@ -8,7 +8,7 @@ router.post("/occurrences", verifyAuth, async (req, res) => {
 
 // @route GET | /occurrences | private | Get all occurrences
 router.get("/occurrences", verifyAuth, async (req, res) => {
-  await occurrenceController.findAll(req, res);
+  await occurrenceController.findAll(res);
 });
 
 // @route PUT | /occurrences/:id | private | Edit a occurrence
