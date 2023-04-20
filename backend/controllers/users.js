@@ -67,6 +67,33 @@ async function find(req, res) {
   }
 }
 
+async function validateUserToken(req, res) {
+  const { token } = req.query;
+  if (!token) {
+    return res.status(400).send({
+      message:
+        "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente.",
+    });
+  }
+  try {
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+      if (err) {
+        return res.status(403).send({
+          message: "Essas credenciais não correspondem aos nossos registros.",
+        });
+      } else {
+        return res.status(200).send({
+          message: "Token válido",
+        });
+      }
+    });
+  } catch (err) {
+    return res.status(500).send({
+      message: "Erro ao tentar encontrar o usuário no servidor" + err.message,
+    });
+  }
+}
+
 async function login(req, res) {
   try {
     const { email, password } = req.body;
@@ -77,7 +104,7 @@ async function login(req, res) {
       });
     }
 
-    let user = await users.findOne({ email }).select("+password");
+    let user = await users.findOne({ email });
     if (!user) {
       return res.status(401).json({
         message: "Essas credenciais não correspondem aos nossos registros.",
@@ -194,4 +221,4 @@ async function remove(req, res) {
   }
 }
 
-module.exports = { create, find, login, update, remove };
+module.exports = { create, find, login, update, remove, validateUserToken };
