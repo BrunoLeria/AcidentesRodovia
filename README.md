@@ -10,8 +10,9 @@ Paraná.
 
 ## Project setup
 
-```
 Projeto é separado em duas pastas diferentes: backend com o servidor e frontend com a aplicaçao
+
+```
 
 # yarn
 yarn
@@ -22,10 +23,10 @@ npm install
 # pnpm
 pnpm install
 
+```
+
 Necessita também a instalação do Mongo DB local:
 Faça o download do MongoDB Compass por este link: https://www.mongodb.com/products/compass
-
-```
 
 ## Para iniciar o frontend
 
