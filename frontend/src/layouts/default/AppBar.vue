@@ -1,8 +1,11 @@
 <script lang="ts" setup>
 import { useRouter } from "vue-router";
 import { ref } from "vue";
+import { useUserStore } from "@/store/users";
+import { IUser } from "@/interfaces/user.interface";
 
 const router = useRouter();
+const userStore = useUserStore();
 
 const hasToken = localStorage.getItem("token") !== "";
 
@@ -14,6 +17,7 @@ const items = ref([
 
 const logout = () => {
 	localStorage.setItem("token", "");
+	userStore.user = {} as IUser;
 	location.reload();
 };
 </script>
@@ -29,11 +33,11 @@ const logout = () => {
 			<v-icon>mdi-dots-vertical</v-icon>
 			<v-menu activator="parent">
 				<v-list>
-					<v-list-item :key="4" :value="4" v-show="hasToken">
-						<v-list-item-title @click="logout">Logout</v-list-item-title>
-					</v-list-item>
 					<v-list-item v-for="(item, index) in items" :key="index" :value="index" v-show="item.show">
 						<v-list-item-title @click="router.push({ path: item.link })">{{ item.title }}</v-list-item-title>
+					</v-list-item>
+					<v-list-item :key="4" :value="4" v-show="hasToken">
+						<v-list-item-title @click="logout">Logout</v-list-item-title>
 					</v-list-item>
 				</v-list>
 			</v-menu>

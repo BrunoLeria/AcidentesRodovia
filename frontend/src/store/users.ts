@@ -11,6 +11,7 @@ export const useUserStore = defineStore("user", {
   actions: {
     async login(email: string, password: string): Promise<boolean> {
       localStorage.setItem("token", "");
+      this.$state.user = {} as IUser;
 
       const raw = JSON.stringify({
         email: email,
@@ -37,6 +38,7 @@ export const useUserStore = defineStore("user", {
             return false;
           } else {
             localStorage.setItem("token", result.token);
+            this.$state.user = result.user;
             return true;
           }
         });
@@ -82,4 +84,5 @@ export const useUserStore = defineStore("user", {
     updateUser(id: number): void {},
     deleteUser(id: number): void {},
   },
+  persist: true,
 });

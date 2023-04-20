@@ -16,6 +16,7 @@
     "happy-dom": "^9.8.1",
     "jsdom": "^21.1.1",
     "pinia": "^2.0.23",
+    "pinia-plugin-persistedstate": "^3.1.0",
     "roboto-fontface": "*",
     "start-server-and-test": "^2.0.0",
     "vitest": "^0.30.1",
