@@ -7,6 +7,8 @@ import { onMounted } from "vue";
 import NewOccurrencesDialog from "./Panel/NewOccurrencesDialog.vue";
 
 const occurrencesStore = useOccurrenceStore();
+const hasToken = localStorage.getItem("token") !== "";
+
 
 const getOccurrences = async () => {
 	const myHeaders = new Headers();
@@ -70,7 +72,7 @@ const colors = [
 				</v-col>
 			</v-row>
 		</v-container>
-		<v-layout-item position="bottom"
+		<v-layout-item v-if="hasToken" position="bottom"
 			style="bottom: 0px; z-index: 1004; transform: translateY(0%); position: fixed; height: 88px; left: 300px; width: calc((100% - 300px) - 256px);">
 			<NewOccurrencesDialog icon="mdi-plus" title="Criar nova ocorrência"
 				sub-title="Insira todas as informações necessárias para documentarmos a sua ocorrência." />

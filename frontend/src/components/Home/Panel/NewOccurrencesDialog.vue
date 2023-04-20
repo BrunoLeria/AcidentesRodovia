@@ -73,12 +73,12 @@ async function onSubmit() {
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col cols="12" sm="6" md="4">
+                  <v-col cols="12">
                     <v-text-field label="Local:" hint="O local onde o acidente ocorreu." required></v-text-field>
                   </v-col>
                 </v-row>
                 <v-row>
-                  <v-col cols="12" sm="6" md="4">
+                  <v-col cols="12">
                     <v-text-field label="KM:" hint="O quilometro que o acidente ocorreu" required></v-text-field>
                   </v-col>
                 </v-row>
