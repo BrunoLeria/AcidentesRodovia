@@ -39,7 +39,7 @@ async function create(req, res) {
 async function findAll(res) {
   try {
     // query for movies that have a runtime less than 15 minutes
-    const query = { id: 1 };
+    const query = {};
     const options = {
       sort: { registered_at: 1 },
     };
