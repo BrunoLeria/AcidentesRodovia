@@ -25,7 +25,9 @@ pnpm install
 ```
 
 Necessita também a instalação do Mongo DB local:
+
 Faça o download do MongoDB Community Server por este link: https://www.mongodb.com/try/download/community
+
 E do MongoDB Compass para visualizar os documentos (Opcional), em: https://www.mongodb.com/products/compass
 
 ## Para iniciar o frontend
