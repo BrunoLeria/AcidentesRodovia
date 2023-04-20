@@ -37,14 +37,12 @@ export const useUserStore = defineStore("user", {
           } else {
             this.user = result.user;
             this.token = result.token;
+            localStorage.setItem("token", result.token);
+            localStorage.setItem("user", JSON.stringify(result.user));
             return true;
           }
         });
       return result;
-    },
-    logout(): void {
-      this.user = {} as IUser;
-      this.token = "";
     },
     async validateUserToken(): Promise<boolean> {
       const requestOptions: RequestInit = {
