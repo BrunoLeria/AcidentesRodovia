@@ -5,12 +5,13 @@ export const useUserStore = defineStore("user", {
   state: () => {
     return {
       user: {} as IUser,
-      token: "",
     };
   },
   getters: {},
   actions: {
     async login(email: string, password: string): Promise<boolean> {
+      localStorage.setItem("token", "");
+
       const raw = JSON.stringify({
         email: email,
         password: password,
@@ -35,27 +36,10 @@ export const useUserStore = defineStore("user", {
             alert(result.message);
             return false;
           } else {
-            this.user = result.user;
-            this.token = result.token;
             localStorage.setItem("token", result.token);
-            localStorage.setItem("user", JSON.stringify(result.user));
             return true;
           }
         });
-      return result;
-    },
-    async validateUserToken(): Promise<boolean> {
-      const requestOptions: RequestInit = {
-        method: "GET",
-        redirect: "follow",
-      };
-      const result = await fetch(
-        `http://localhost:5000/validate/?token=${this.$state.token}`,
-        requestOptions
-      ).then((response) => {
-        if (response.status === 200) return true;
-        else return false;
-      });
       return result;
     },
     async addUser(
