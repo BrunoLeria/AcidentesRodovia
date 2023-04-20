@@ -1,6 +1,14 @@
 <script setup lang="ts">
 import Title from "@/components/Login/Title.vue";
 import Form from "@/components/Login/Form.vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+if (localStorage.getItem("token") !== "") {
+	router.push({ path: "/" });
+}
+
 </script>
 
 <template>

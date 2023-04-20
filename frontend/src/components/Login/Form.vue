@@ -25,7 +25,7 @@ async function onSubmit() {
 
   const result = await userStore.login(email.value, password.value);
   loading.value = false;
-  if (result) router.push({ name: "Home" });
+  if (result) location.reload();
 }
 </script>
 
