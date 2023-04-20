@@ -14,7 +14,6 @@ const items = ref([
 
 const logout = () => {
 	localStorage.setItem("token", "");
-	localStorage.setItem("user", "");
 	location.reload();
 };
 </script>
