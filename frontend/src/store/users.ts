@@ -42,6 +42,10 @@ export const useUserStore = defineStore("user", {
         });
       return result;
     },
+    logout(): void {
+      this.user = {} as IUser;
+      this.token = "";
+    },
     async validateUserToken(): Promise<boolean> {
       const requestOptions: RequestInit = {
         method: "GET",

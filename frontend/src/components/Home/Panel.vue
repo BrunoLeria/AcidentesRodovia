@@ -8,7 +8,7 @@ import NavigationDrawer from "@/components/Home/Panel/NavigationDrawer.vue";
 		<v-container>
 			<v-row>
 				<v-col v-for="n in 24" :key="n" cols="6" sm="4">
-					<Card />
+					<!-- <Card /> -->
 				</v-col>
 			</v-row>
 		</v-container>
