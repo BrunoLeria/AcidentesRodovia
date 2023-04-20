@@ -27,24 +27,13 @@ async function onSubmit() {
 
   loading.value = true;
 
-  const newUser = {
-    id: userStore.userList.length + 1,
-    name: name.value,
-    email: email.value,
-    password: password.value,
-  };
-
-  userStore.userList.push(newUser);
-  const result = await userStore.verifyUser(newUser.email, newUser.password);
-  loading.value = false;
-
-
-  if (result === undefined) {
-    alert("Usuário não encontrado");
-  } else {
-    router.push({ path: `/${result.id}` });
-  }
-
+  await userStore.addUser(name.value, email.value, password.value).then(async (response) => {
+    if (response) {
+      const result = await userStore.login(email.value, password.value);
+      loading.value = false;
+      if (result) router.push({ path: "/" });
+    }
+  });
 }
 </script>
 
