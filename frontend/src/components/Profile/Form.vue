@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useUserStore } from "@/store/users";
-import ConfirmPasswordDialog from "../Utils/ConfirmPasswordDialog.vue";
+import ConfirmPasswordDialog from "./ConfirmPasswordDialog.vue";
 
 const userStore = useUserStore();
 
