@@ -25,7 +25,7 @@ async function onSubmit() {
 
   const result = await userStore.login(email.value, password.value);
   loading.value = false;
-  if (result) router.push({ path: `/${userStore.user.id}` });
+  if (result) router.push({ path: "/" });
 }
 </script>
 
