@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { IOccurrence } from "@/interfaces/occurrence.interface";
 import { useUserStore } from "./users";
-import { getToday } from "@/utils/DateTimeTratement";
+import { getToday } from "@/utils/DateTimeTreatment";
 
 const userStore = useUserStore();
 
@@ -13,34 +13,6 @@ export const useOccurrenceStore = defineStore("user", {
   },
   getters: {},
   actions: {
-    async getOccurrences(): Promise<boolean> {
-      const myHeaders = new Headers();
-
-      const requestOptions: RequestInit = {
-        method: "GET",
-        headers: myHeaders,
-        redirect: "follow",
-      };
-
-      const result = await fetch(
-        "http://localhost:5000/occurrences",
-        requestOptions
-      )
-        .then((response) => {
-          return response.json();
-        })
-        .then((result) => {
-          if (result.hasOwnProperty("message")) {
-            alert(result.message);
-            return false;
-          } else {
-            this.$state.occurrences = result;
-            return true;
-          }
-        });
-
-      return result;
-    },
     async addOccurrence(
       local: string,
       occurrence_tipe: string,
@@ -128,8 +100,6 @@ export const useOccurrenceStore = defineStore("user", {
           );
         });
 
-      if (result) this.getOccurrences();
-
       return result;
     },
     async deleteUser(id: number): Promise<boolean> {
@@ -159,8 +129,6 @@ export const useOccurrenceStore = defineStore("user", {
             result.message === "Ocorrência excluida com sucesso"
           );
         });
-
-      if (result) this.getOccurrences();
 
       return result;
     },
