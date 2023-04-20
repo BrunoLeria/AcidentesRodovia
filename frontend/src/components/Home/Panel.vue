@@ -4,6 +4,7 @@ import NavigationDrawer from "@/components/Home/Panel/NavigationDrawer.vue";
 import { useOccurrenceStore } from "@/store/occurrences";
 import { getRandomIntInclusive } from "@/utils/NumbersTreatment";
 import { onMounted } from "vue";
+import NewOccurrencesDialog from "./Panel/NewOccurrencesDialog.vue";
 
 const occurrencesStore = useOccurrenceStore();
 
@@ -69,5 +70,10 @@ const colors = [
 				</v-col>
 			</v-row>
 		</v-container>
+		<v-layout-item position="bottom"
+			style="bottom: 0px; z-index: 1004; transform: translateY(0%); position: fixed; height: 88px; left: 300px; width: calc((100% - 300px) - 256px);">
+			<NewOccurrencesDialog icon="mdi-plus" title="Criar nova ocorrência"
+				sub-title="Insira todas as informações necessárias para documentarmos a sua ocorrência." />
+		</v-layout-item>
 	</div>
 </template>

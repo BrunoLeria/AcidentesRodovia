@@ -5,7 +5,7 @@ import { getToday } from "@/utils/DateTimeTreatment";
 
 const userStore = useUserStore();
 
-export const useOccurrenceStore = defineStore("user", {
+export const useOccurrenceStore = defineStore("occurrence", {
   state: () => {
     return {
       occurrences: [] as IOccurrence[],
