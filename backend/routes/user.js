@@ -17,12 +17,12 @@ router.get("/users", verifyAuth, async (req, res) => {
 });
 
 // @route PUT | /users/:id | private | Edit a user
-router.put("/users", verifyAuth, async (req, res) => {
+router.put("/users/:id", verifyAuth, async (req, res) => {
   await userController.update(req, res);
 });
 
 // @route DELETE | /users/:id | private | Delete a user
-router.delete("/users", verifyAuth, async (req, res) => {
+router.delete("/users/:id", verifyAuth, async (req, res) => {
   await userController.remove(req, res);
 });
 

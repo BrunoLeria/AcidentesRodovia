@@ -43,7 +43,7 @@ async function create(req, res) {
 }
 
 async function find(req, res) {
-  const { id } = req.query;
+  const { id } = req.params;
   if (!id) {
     return res.status(400).send({
       message:
@@ -68,7 +68,7 @@ async function find(req, res) {
 }
 
 async function validateUserToken(req, res) {
-  const { token } = req.query;
+  const { token } = req.params;
   if (!token) {
     return res.status(400).send({
       message:
@@ -144,7 +144,7 @@ async function login(req, res) {
 
 async function update(req, res) {
   // Validate request
-  const { id } = req.query;
+  const { id } = req.params;
   if (!id) {
     return res.status(400).send({
       message:
@@ -162,7 +162,7 @@ async function update(req, res) {
 
   try {
     // create a filter for a movie to update
-    const filter = { id: id };
+    const filter = { id: parseInt(id) };
     // this option instructs the method to create a document if no documents match the filter
     const options = { upsert: true };
     // create a document that sets the plot of the movie
@@ -176,15 +176,15 @@ async function update(req, res) {
     const result = await users.updateOne(filter, updateDoc, options);
 
     console.log(result);
-    // if (num === 1) {
-    //     return res.status(200).send({
-    //       message: "Atualização do usuário realizada com sucesso",
-    //     });
-    //   } else {
-    //     return res.status(403).send({
-    //       message: "Essas credenciais não correspondem aos nossos registros.",
-    //     });
-    //   }
+    if (result.modifiedCount === 1) {
+      return res.status(200).send({
+        message: "Atualização do usuário realizada com sucesso",
+      });
+    } else {
+      return res.status(403).send({
+        message: "Essas credenciais não correspondem aos nossos registros.",
+      });
+    }
   } catch (err) {
     return res.status(500).send({
       message: "Erro ao tentar atualizar o usuário no servidor" + err.message,
@@ -193,7 +193,7 @@ async function update(req, res) {
 }
 
 async function remove(req, res) {
-  const { id } = req.query;
+  const { id } = req.params;
   if (!id) {
     return res.status(400).send({
       message:
@@ -203,7 +203,7 @@ async function remove(req, res) {
 
   try {
     // Query for a movie that has title "Annie Hall"
-    const query = { id: id };
+    const query = { id: parseInt(id) };
     const result = await users.deleteOne(query);
     if (result.deletedCount === 1) {
       return res.status(200).send({
