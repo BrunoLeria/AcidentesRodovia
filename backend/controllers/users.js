@@ -62,7 +62,7 @@ async function find(req, res) {
     return res.status(200).send(user);
   } catch (err) {
     return res.status(500).send({
-      message: "Erro ao tentar encontrar o usuário no servidor" + err.message,
+      message: "Erro ao tentar encontrar o usuário no servidor. " + err.message,
     });
   }
 }
@@ -89,7 +89,7 @@ async function validateUserToken(req, res) {
     });
   } catch (err) {
     return res.status(500).send({
-      message: "Erro ao tentar encontrar o usuário no servidor" + err.message,
+      message: "Erro ao tentar encontrar o usuário no servidor. " + err.message,
     });
   }
 }
@@ -137,7 +137,7 @@ async function login(req, res) {
   } catch (err) {
     console.error(err.message);
     res.status(500).json({
-      message: "Erro ao tentar encontrar o usuário no servidor" + err.message,
+      message: "Erro ao tentar encontrar o usuário no servidor. " + err.message,
     });
   }
 }
@@ -152,8 +152,8 @@ async function update(req, res) {
     });
   }
 
-  const { name, email, password } = req.body;
-  if (!name || !email || !password) {
+  const { name, email } = req.body;
+  if (!name || !email) {
     return res.status(400).json({
       message:
         "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente.",
@@ -161,10 +161,16 @@ async function update(req, res) {
   }
 
   try {
-    // create a filter for a movie to update
+    // create a filter for a user to update
     const filter = { id: parseInt(id) };
-    // this option instructs the method to create a document if no documents match the filter
-    const options = { upsert: true };
+
+    const oldUser = await users.findOne(filter);
+    let password = oldUser.password;
+    if (req.body.password !== "") {
+      const salt = await bcrypt.genSalt(10);
+      password = await bcrypt.hash(req.body.password, salt);
+    }
+
     // create a document that sets the plot of the movie
     const updateDoc = {
       $set: {
@@ -173,9 +179,7 @@ async function update(req, res) {
         password: password,
       },
     };
-    const result = await users.updateOne(filter, updateDoc, options);
-
-    console.log(result);
+    const result = await users.updateOne(filter, updateDoc);
     if (result.modifiedCount === 1) {
       return res.status(200).send({
         message: "Atualização do usuário realizada com sucesso",
@@ -187,7 +191,7 @@ async function update(req, res) {
     }
   } catch (err) {
     return res.status(500).send({
-      message: "Erro ao tentar atualizar o usuário no servidor" + err.message,
+      message: "Erro ao tentar atualizar o usuário no servidor. " + err.message,
     });
   }
 }
@@ -216,7 +220,7 @@ async function remove(req, res) {
     }
   } catch (err) {
     return res.status(500).send({
-      message: "Erro ao tentar excluir o usuário no servidor" + err.message,
+      message: "Erro ao tentar excluir o usuário no servidor. " + err.message,
     });
   }
 }
