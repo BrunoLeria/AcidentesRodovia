@@ -12,6 +12,7 @@ const hasToken = localStorage.getItem("token") !== "";
 const items = ref([
 	{ title: "Login", link: "/login", show: !hasToken },
 	{ title: "Register", link: "/register", show: !hasToken },
+	{ title: "Profile", link: "/profile", show: hasToken },
 	{ title: "About", link: "/about", show: true }
 ]);
 

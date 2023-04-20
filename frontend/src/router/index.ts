@@ -30,6 +30,12 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "about" */ "@/views/About.vue"),
       },
+      {
+        path: "profile",
+        name: "Profile",
+        component: () =>
+          import(/* webpackChunkName: "profile" */ "@/views/Profile.vue"),
+      },
     ],
   },
 ];
@@ -43,8 +49,13 @@ router.beforeEach(async (to, from) => {
   if (
     localStorage.getItem("token") !== "" &&
     to.name !== "Home" &&
-    to.name !== "About"
+    to.name !== "About" &&
+    to.name !== "Profile"
   ) {
+    return { name: "Home" };
+  }
+
+  if (to.name === "Profile" && localStorage.getItem("token") === "") {
     return { name: "Home" };
   }
 });
