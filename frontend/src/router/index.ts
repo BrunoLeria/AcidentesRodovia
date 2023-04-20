@@ -40,4 +40,13 @@ const router = createRouter({
   routes,
 });
 
+router.beforeEach(async (to, from) => {
+  if (
+    localStorage.getItem("token") !== "" &&
+    to.name !== "Home" &&
+    to.name !== "About"
+  ) {
+    return { name: "Home" };
+  }
+});
 export default router;
