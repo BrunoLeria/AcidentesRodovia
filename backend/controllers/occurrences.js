@@ -39,11 +39,15 @@ async function create(req, res) {
 async function findAll(res) {
   try {
     // query for movies that have a runtime less than 15 minutes
-    const query = {};
+    const query = { id: 1 };
     const options = {
       sort: { registered_at: 1 },
     };
-    const list = occurrences.find(query, options);
+    const cursor = occurrences.find(query, options);
+    const list = [];
+    await cursor.forEach((doc) => {
+      list.push(doc);
+    });
     // print a message if no documents were found
     if ((await occurrences.countDocuments(query)) === 0) {
       return res.status(404).send({

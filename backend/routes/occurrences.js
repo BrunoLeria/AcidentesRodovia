@@ -7,7 +7,7 @@ router.post("/occurrences", verifyAuth, async (req, res) => {
 });
 
 // @route GET | /occurrences | private | Get all occurrences
-router.get("/occurrences", verifyAuth, async (req, res) => {
+router.get("/occurrences", async (req, res) => {
   await occurrenceController.findAll(res);
 });
 
