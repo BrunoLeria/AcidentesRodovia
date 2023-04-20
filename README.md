@@ -13,7 +13,6 @@ Paraná.
 Projeto é separado em duas pastas diferentes: backend com o servidor e frontend com a aplicaçao
 
 ```
-
 # yarn
 yarn
 
