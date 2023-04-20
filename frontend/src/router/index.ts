@@ -1,6 +1,5 @@
 // Composables
 import { createRouter, createWebHistory } from "vue-router";
-
 const routes = [
   {
     path: "/",
@@ -24,6 +23,12 @@ const routes = [
         path: "register",
         name: "Register",
         component: () => import("@/views/Register.vue"),
+      },
+      {
+        path: "/:id",
+        name: "UsersHome",
+        component: () => import("@/views/Home.vue"),
+        props: true,
       },
     ],
   },

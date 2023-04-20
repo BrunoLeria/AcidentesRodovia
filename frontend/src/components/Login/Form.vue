@@ -23,16 +23,9 @@ async function onSubmit() {
 
   loading.value = true;
 
-  const result = await userStore.verifyUser(email.value, password.value);
+  const result = await userStore.login(email.value, password.value);
   loading.value = false;
-
-
-  if (result === undefined) {
-    alert("Usuário não encontrado");
-  } else {
-    router.push({ path: `/${result.id}` });
-  }
-
+  if (result) router.push({ path: `/${userStore.user.id}` });
 }
 </script>
 
