@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useRouter } from "vue-router";
 import { useUserStore } from "@/store/users";
 
-
-
-const router = useRouter();
 const userStore = useUserStore();
 
 const form = ref(false);
