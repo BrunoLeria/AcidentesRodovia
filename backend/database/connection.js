@@ -6,4 +6,4 @@ const database = client.db("acidentesDB");
 const users = database.collection("users");
 const occurrences = database.collection("occurrences");
 
-module.exports = { client, users, occurrences };
+module.exports = { users, occurrences };

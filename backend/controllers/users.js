@@ -1,4 +1,4 @@
-const { client, users } = require("../database/connection.js");
+const { users } = require("../database/connection.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
