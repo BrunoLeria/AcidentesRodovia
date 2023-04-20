@@ -1,20 +1,27 @@
 <script lang="ts" setup>
 import { useRouter } from "vue-router";
-import { useUserStore } from "@/store/users";
 import { ref } from "vue";
+
 const router = useRouter();
-const userStore = useUserStore();
+
+const hasToken = localStorage.getItem("token") !== "";
+
 const items = ref([
-	{ title: "Login", function: router.push({ name: "Login" }), show: userStore.token === "" },
-	{ title: "Register", function: router.push({ name: "Register" }), show: userStore.token === "" },
-	{ title: "Logout", function: userStore.logout(), show: userStore.token !== "" },
-	{ title: "About", function: router.push({ name: "About" }), show: true }
+	{ title: "Login", link: "/login", show: !hasToken },
+	{ title: "Register", link: "/register", show: !hasToken },
+	{ title: "About", link: "/about", show: true }
 ]);
+
+const logout = () => {
+	localStorage.setItem("token", "");
+	localStorage.setItem("user", "");
+	location.reload();
+};
 </script>
 
 <template>
 	<v-app-bar flat>
-		<v-app-bar-title @click="router.push({ name: 'Home' })">
+		<v-app-bar-title @click="router.push({ path: '/' })">
 			<v-icon icon="mdi-road-variant"></v-icon>
 			Acidentes de rodovia
 		</v-app-bar-title>
@@ -23,8 +30,11 @@ const items = ref([
 			<v-icon>mdi-dots-vertical</v-icon>
 			<v-menu activator="parent">
 				<v-list>
+					<v-list-item :key="4" :value="4" v-show="hasToken">
+						<v-list-item-title @click="logout">Logout</v-list-item-title>
+					</v-list-item>
 					<v-list-item v-for="(item, index) in items" :key="index" :value="index" v-show="item.show">
-						<v-list-item-title @click="item.function">{{ item.title }}</v-list-item-title>
+						<v-list-item-title @click="router.push({ path: item.link })">{{ item.title }}</v-list-item-title>
 					</v-list-item>
 				</v-list>
 			</v-menu>
