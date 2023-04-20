@@ -1,145 +1,134 @@
-const db = require("../models/db.model");
-const Report = db.reports;
-const Op = db.Sequelize.Op;
-const sequelize = db.sequelize;
-const { QueryTypes } = require("sequelize");
+const { occurrences } = require("../database/connection.js");
 
-// Create and Save a new Report
+// Create and Save a new Occurrence
 async function create(req, res) {
-    // Validate request
-    if (!req.body) {
-        return res.status(400).json({
-            message: err || "Conteúdo não pode estar vazio!",
-        });
-    }
-
-    // Create a Report
-    await Report.create({
-        rpt_email: req.body.email,
-        rpt_route: req.body.route,
-        rpt_kilometer: req.body.kilometer,
-        rpt_type: req.body.type,
-        rpt_description: req.body.description,
-    })
-        .then(() => {
-            return res.status(201);
-        })
-        .catch((err) => {
-            return res.status(500).send({
-                message: "Erro encontrado ao criar relatório novo. " + err.message,
-            });
-        });
-};
-
-async function read(req, res) {
-    if (!req.query.id) {
-        return res.status(400).send({ message: "Id do relatório não fornecido." });
-    }
-
-    const id = req.query.id;
-    
-    Report.findOne({ where: { rpt_identification: id } })
-        .then((data) => {
-            if (!data) {
-                return res.status(406).send({
-                    message: "Relatório não encontrado com Id = " + id,
-                });
-            }
-            return res.status(200).send(data);
-        })
-        .catch((err) => {
-            return res.status(500).send({
-                message:
-                    "Erro ao buscar relatório com Id = " +
-                    id +
-                    ". " +
-                    err.message,
-            });
-        });
-};
-
-async function readAll(req, res) {
-    const rpt_email = req.body.email || "";
-
-    Report.findAll({
-        where: { rpt_email: rpt_email },
-    })
-    .then((data) => {
-      if (data.length < 1 || data == null) {
-        return res.status(200).send({
-          message: "Nenhum relatório encontrado.",
-        });
-      }
-      return res.status(200).send(data);
-    })
-    .catch((err) => {
-      return res.status(500).send({
-        message: "Erro encontrado ao buscar relatórios. " + err.message,
-      });
+  // Validate request
+  const { registered_at, local, occurrence_tipe, km, user_id } = req.body;
+  if (!registered_at || !local || !occurrence_tipe || !km || !user_id) {
+    return res.status(400).json({
+      message:
+        "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente.",
     });
+  }
+
+  try {
+    const id = (await occurrences.countDocuments()) + 1;
+
+    const newOcurrence = {
+      id: id,
+      registered_at: registered_at,
+      local: local,
+      occurrence_tipe: occurrence_tipe,
+      km: km,
+      user_id: user_id,
+    };
+
+    await occurrences.insertOne(newOcurrence).then(() => {
+      return res.status(201).send(newOcurrence);
+    });
+
+    console.log("Ocorrência cadastrada com sucesso!");
+  } catch (err) {
+    return res.status(500).send({
+      message:
+        "Erro ao tentar cadastrar a ocorrência no servidor. " + err.message,
+    });
+  }
+}
+
+async function findAll(res) {
+  try {
+    // query for movies that have a runtime less than 15 minutes
+    const query = {};
+    const options = {
+      sort: { registered_at: 1 },
+    };
+    const list = occurrences.find(query, options);
+    // print a message if no documents were found
+    if ((await occurrences.countDocuments(query)) === 0) {
+      return res.status(404).send({
+        message: "Ocorrências do usuário informado não foram encontradas.",
+      });
+    }
+    return res.status(200).send(list);
+  } catch (err) {
+    return res.status(500).send({
+      message:
+        "Erro ao tentar encontrar as ocorrências no servidor. " + err.message,
+    });
+  }
 }
 
 async function update(req, res) {
-    if (!req.body) {
-        return res.status(400).send({
-            message: "Dados não fornecidos.",
-        });
-    }
-    if (!req.query.id) {
-        return res.status(400).send({
-            message: "Id do relatório não fornecido.",
-        });
-    }
-    const id = req.query.id;
+  // Validate request
+  const { id } = req.params;
+  if (!id) {
+    return res.status(400).send({
+      message:
+        "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente.",
+    });
+  }
 
-    Report.update(req.body, {
-        where: { rpt_identification: id },
-    })
-        .then((num) => {
-            if (num === 1) {
-                return res.status(200).send({
-                    message: "Relatório foi atualizado com sucesso!",
-                });
-            } else {
-                return res.status(406).send({
-                    message: `Não foi possível atualizar o relatório com o Id = ${id}. Talvez o relatório não exista ou o body veio vazio.`,
-                });
-            }
-        })
-        .catch((err) => {
-            return res.status(500).send({
-                message:
-                    "Erro ao atualizar o relatório com o Id = " + id + ". " + err.message,
-            });
-        });
-};
+  try {
+    // create a filter for a occurrence to update
+    const filter = { id: parseInt(id) };
 
-async function remove(req, res) {
-    if (!req.query.id) {
-        return res.status(400).send({
-            message: "Id do relatório não fornecido.",
-        });
+    const oldOccurrence = await occurrences.findOne(filter);
+
+    // create a document that sets the plot of the movie
+    const updateDoc = {
+      $set: {
+        local: local || oldOccurrence.local,
+        occurrence_tipe: occurrence_tipe || oldOccurrence.occurrence_tipe,
+        km: km || oldOccurrence.km,
+      },
+    };
+    const result = await occurrences.updateOne(filter, updateDoc);
+    if (result.modifiedCount === 1) {
+      return res.status(200).send({
+        message: "Atualização da ocorrência realizada com sucesso",
+      });
+    } else {
+      return res.status(403).send({
+        message: "Essas credenciais não correspondem aos nossos registros.",
+      });
     }
-    const id = req.query.id;
-
-    Report.destroy({
-        where: { rpt_identification: id },
-    })
-        .then((num) => {
-            if (num === 1) {
-                return res.status(204);
-            } else {
-                return res.status(406).send({
-                    message: `Não foi possível deletar o relatório com Id = ${id}. Talvez o relatório não exista.`,
-                });
-            }
-        })
-        .catch((err) => {
-            return res.status(500).send({
-                message:
-                    "Erro ao deletar o relatório com o Id = " + id + ". " + err.message,
-            });
-        });
+  } catch (err) {
+    return res.status(500).send({
+      message:
+        "Erro ao tentar atualizar a ocorrência no servidor. " + err.message,
+    });
+  }
 }
 
-module.exports = { create, read, readAll, update, remove };
+async function remove(req, res) {
+  const { id } = req.params;
+  if (!id) {
+    return res.status(400).send({
+      message:
+        "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente.",
+    });
+  }
+
+  try {
+    // Query for a movie that has title "Annie Hall"
+    const query = { id: parseInt(id) };
+    const result = await occurrences.deleteOne(query);
+    if (result.deletedCount === 1) {
+      return res.status(200).send({
+        message: "Usuário excluido com sucesso",
+      });
+    } else {
+      return res.status(403).send({
+        message: "Essas credenciais não correspondem aos nossos registros.",
+      });
+    }
+  } catch (err) {
+    return res.status(500).send({
+      message:
+        "Erro ao tentar excluir a ocorrência no servidor. " + err.message,
+    });
+  }
+}
+
+module.exports = { create, findAll, update, remove };
