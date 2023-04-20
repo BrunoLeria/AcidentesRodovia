@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ref, defineProps } from "vue";
 import { useUserStore } from "@/store/users";
-
-
 const props = defineProps({
   email: {
     type: String,

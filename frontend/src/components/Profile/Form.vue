@@ -17,6 +17,21 @@ const rules = ref({
   emailValid: (v: string) => /.+@.+\..+/.test(v) || "E-mail deve ser válido",
   confirmPassword: (v: string) => v === password.value || "Senhas não conferem"
 });
+
+const updateUser = async () => {
+  if (!form) return;
+
+  const result = await userStore.updateUser(name.value, email.value, password.value);
+  if (result) location.reload();
+};
+
+const deleteUser = async () => {
+  if (!form) return;
+
+  const result = await userStore.deleteUser();
+  if (result) location.reload();
+};
+
 </script>
 
 <template>
@@ -30,8 +45,8 @@ const rules = ref({
       </v-row>
       <v-row>
         <v-col>
-          <v-text-field disabled v-model="email" :rules="[rules.required, rules.emailValid]" class="mb-2" clearable
-            label="E-mail" placeholder="Digite o seu e-mail"></v-text-field>
+          <v-text-field disabled v-model="email" class="mb-2" clearable label="E-mail"
+            placeholder="Digite o seu e-mail"></v-text-field>
         </v-col>
       </v-row>
       <v-row>
@@ -49,14 +64,14 @@ const rules = ref({
     </v-container>
     <br />
     <v-container>
-      <confirm-password-dialog :disabled="!form" :email="userStore.user.email" :on-confirm="userStore.updateUser"
-        :color="'green-darken-4'" :button-text="'Confirmar'" />
+      <confirm-password-dialog :email="userStore.user.email" :on-confirm="updateUser" :color="'green-darken-4'"
+        :button-text="'Confirmar'" />
     </v-container>
     <br />
     <v-divider />
     <br />
     <v-container>
-      <confirm-password-dialog :email="userStore.user.email" :on-confirm="userStore.deleteUser" :color="'red-darken-2'"
+      <confirm-password-dialog :email="userStore.user.email" :on-confirm="deleteUser" :color="'red-darken-2'"
         :button-text="'Excluír perfil'" />
     </v-container>
   </v-form>
