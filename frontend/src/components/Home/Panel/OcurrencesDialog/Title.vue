@@ -4,10 +4,6 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  subTitle: {
-    type: String,
-    required: true,
-  },
 });
 
 </script>
@@ -17,6 +13,6 @@ const props = defineProps({
     <span class="text-h5">{{ props.title }}</span>
   </v-card-title>
   <v-card-subtitle>
-    <span class="text-body-2">{{ props.subTitle }}</span>
+    <span class="text-body-2">Insira todas as informações necessárias para documentarmos a sua ocorrência.</span>
   </v-card-subtitle>
 </template>
