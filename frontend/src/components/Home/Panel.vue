@@ -4,7 +4,8 @@ import NavigationDrawer from "@/components/Home/Panel/NavigationDrawer.vue";
 import { useOccurrenceStore } from "@/store/occurrences";
 import { getRandomIntInclusive } from "@/utils/NumbersTreatment";
 import { onMounted } from "vue";
-import NewOccurrencesDialog from "./Panel/NewOccurrencesDialog.vue";
+import OccurrencesDialog from "./Panel/OccurrencesDialog.vue";
+import { colors } from "@/utils/Colors";
 
 const occurrencesStore = useOccurrenceStore();
 const hasToken = localStorage.getItem("token") !== "";
@@ -37,28 +38,6 @@ onMounted(() => {
 	getOccurrences();
 });
 
-const colors = [
-	"red-lighten-1",
-	"pink-lighten-1",
-	"purple-lighten-1",
-	"deep-purple-lighten-1",
-	"indigo-lighten-1",
-	"blue-lighten-1",
-	"light-blue-lighten-1",
-	"cyan-lighten-1",
-	"teal-lighten-1",
-	"green-lighten-1",
-	"light-green-lighten-1",
-	"lime-lighten-1",
-	"yellow-lighten-1",
-	"amber-lighten-1",
-	"orange-lighten-1",
-	"deep-orange-lighten-1",
-	"brown-lighten-1",
-	"grey-lighten-1",
-	"blue-grey-lighten-1",
-]
-
 </script>
 <template>
 	<div class="d-flex flex-row mb-6 bg-surface-variant">
@@ -72,8 +51,11 @@ const colors = [
 		</v-container>
 		<v-layout-item v-if="hasToken" position="bottom"
 			style="bottom: 0px; z-index: 1004; transform: translateY(0%); position: fixed; height: 88px; left: 300px; width: calc((100% - 300px) - 256px);">
-			<NewOccurrencesDialog :icon="'mdi-plus'" title="Criar nova ocorrência"
-				sub-title="Insira todas as informações necessárias para documentarmos a sua ocorrência." />
+			<v-container>
+				<v-row justify="center">
+					<occurrences-dialog :icon="'mdi-plus'" title="Criar nova ocorrência" />
+				</v-row>
+			</v-container>
 		</v-layout-item>
 	</div>
 </template>

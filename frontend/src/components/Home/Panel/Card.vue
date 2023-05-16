@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { defineProps } from 'vue';
 import { IOccurrence } from "@/interfaces/occurrence.interface";
+import OccurrencesDialog from './OccurrencesDialog.vue';
 
 const props = defineProps({
     occurrence: {
@@ -22,9 +22,8 @@ const props = defineProps({
                     {{ props.occurrence.local }}
                 </v-col>
                 <v-col cols="2">
-                    <v-btn variant="text">
-                        <v-icon icon="mdi-pencil"></v-icon>
-                    </v-btn>
+                    <occurrences-dialog :occurrence="props.occurrence" variant="text" icon="mdi-pencil"
+                        title="Editar sua ocorrência" />
                 </v-col>
                 <v-col cols="3">
                     <v-btn variant="text">
