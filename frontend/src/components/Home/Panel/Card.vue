@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { IOccurrence } from "@/interfaces/occurrence.interface";
 import OccurrencesDialog from './OccurrencesDialog.vue';
+import ConfirmDialog from "./ConfirmDialog.vue";
+import { useOccurrenceStore } from "@/store/occurrences";
 
 const props = defineProps({
     occurrence: {
@@ -12,6 +14,12 @@ const props = defineProps({
         required: true,
     },
 });
+const ocorrenceStore = useOccurrenceStore();
+
+const deleteOccurrence = async () => {
+    await ocorrenceStore.deleteOccurrence(props.occurrence.id);
+}
+
 </script>
 
 <template>
@@ -26,9 +34,8 @@ const props = defineProps({
                         title="Editar sua ocorrência" />
                 </v-col>
                 <v-col cols="3">
-                    <v-btn variant="text">
-                        <v-icon icon="mdi-delete"></v-icon>
-                    </v-btn>
+                    <confirm-dialog :function="deleteOccurrence" text="Deseja excluir a ocorrência?" icon="mdi-delete"
+                        variant="text" />
                 </v-col>
             </v-row>
         </v-card-title>
