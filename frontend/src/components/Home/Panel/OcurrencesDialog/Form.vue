@@ -2,9 +2,16 @@
 import { ref } from "vue";
 import { useOccurrenceStore } from "../../../../store/occurrences";
 import { localRules, kmRules, requiredRules } from "../../../../utils/FormRules";
-
+import { IOccurrence } from "../../../../interfaces/occurrence.interface";
 
 const emit = defineEmits(['loading', 'dialog'])
+
+const props = defineProps({
+  occurrence: {
+    type: Object as () => IOccurrence,
+    required: false,
+  },
+});
 
 const occurrencesStore = useOccurrenceStore();
 const form = ref(false);
@@ -29,15 +36,30 @@ const local = ref("");
 const occurrence_tipe = ref("");
 const km = ref("");
 
+if (props.occurrence) {
+  local.value = props.occurrence.local;
+  occurrence_tipe.value = props.occurrence.occurrence_tipe;
+  km.value = props.occurrence.km.toString();
+}
+
 async function onSubmit() {
   if (form.value) {
-    console.log(form.value);
+
     emit("loading", true);
-    await occurrencesStore.addOccurrence(
-      local.value,
-      occurrence_tipe.value,
-      parseInt(km.value),
-    );
+    if (!props.occurrence)
+      await occurrencesStore.addOccurrence(
+        local.value,
+        occurrence_tipe.value,
+        parseInt(km.value),
+      );
+    else {
+      await occurrencesStore.updateOccurrence(
+        props.occurrence.id,
+        local.value,
+        occurrence_tipe.value,
+        parseInt(km.value),
+      );
+    }
     emit("loading", false);
     emit("dialog", false);
   }
