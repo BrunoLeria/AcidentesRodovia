@@ -45,16 +45,20 @@ export const useOccurrenceStore = defineStore("occurrence", {
         requestOptions
       )
         .then((response) => {
+          if (response.status === 401) {
+            alert("Sessão expirada, faça login novamente");
+            return false;
+          }
           return response.json();
         })
         .then((result) => {
+          if (result === false) return false;
           if (result.hasOwnProperty("message")) {
             alert(result.message);
             return false;
-          } else {
-            this.$state.occurrences.push(result);
-            return true;
           }
+          this.$state.occurrences.push(result);
+          return true;
         });
 
       return result;
