@@ -63,7 +63,7 @@ export const useOccurrenceStore = defineStore("occurrence", {
 
       return result;
     },
-    async updateUser(
+    async updateOccurrence(
       id: number,
       local: string,
       occurrence_tipe: string,
@@ -106,7 +106,7 @@ export const useOccurrenceStore = defineStore("occurrence", {
 
       return result;
     },
-    async deleteUser(id: number): Promise<boolean> {
+    async deleteOccurrence(id: number): Promise<boolean> {
       const myHeaders = new Headers();
       myHeaders.append(
         "x-token",
