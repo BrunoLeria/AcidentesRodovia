@@ -27,9 +27,7 @@ const getOccurrences = async () => {
 			return response.json();
 		})
 		.then((result) => {
-			if (result.hasOwnProperty("message")) {
-				alert(result.message);
-			} else {
+			if (!result.hasOwnProperty("message")) {
 				occurrencesStore.occurrences = result;
 			}
 		});
@@ -74,7 +72,7 @@ const colors = [
 		</v-container>
 		<v-layout-item v-if="hasToken" position="bottom"
 			style="bottom: 0px; z-index: 1004; transform: translateY(0%); position: fixed; height: 88px; left: 300px; width: calc((100% - 300px) - 256px);">
-			<NewOccurrencesDialog icon="mdi-plus" title="Criar nova ocorrência"
+			<NewOccurrencesDialog :icon="'mdi-plus'" title="Criar nova ocorrência"
 				sub-title="Insira todas as informações necessárias para documentarmos a sua ocorrência." />
 		</v-layout-item>
 	</div>
