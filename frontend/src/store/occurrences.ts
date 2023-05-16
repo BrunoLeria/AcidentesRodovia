@@ -94,9 +94,14 @@ export const useOccurrenceStore = defineStore("occurrence", {
         requestOptions
       )
         .then((response) => {
+          if (response.status === 401) {
+            alert("Sessão expirada, faça login novamente");
+            return false;
+          }
           return response.json();
         })
         .then((result) => {
+          if (!result) return false;
           alert(result.message);
           return (
             result.hasOwnProperty("message") &&
@@ -124,9 +129,14 @@ export const useOccurrenceStore = defineStore("occurrence", {
         requestOptions
       )
         .then((response) => {
+          if (response.status === 401) {
+            alert("Sessão expirada, faça login novamente");
+            return false;
+          }
           return response.json();
         })
         .then((result) => {
+          if (!result) return false;
           alert(result.message);
           return (
             result.hasOwnProperty("message") &&
