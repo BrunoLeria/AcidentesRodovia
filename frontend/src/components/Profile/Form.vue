@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { useUserStore } from "@/store/users";
 import ConfirmPasswordDialog from "./ConfirmPasswordDialog.vue";
+import { passwordRules, requiredRules } from "@/utils/FormRules";
 
 const userStore = useUserStore();
 
@@ -11,12 +12,9 @@ const email = ref(userStore.user.email);
 const password = ref("");
 const confirmPassword = ref("");
 const showPassword = ref(false);
-const rules = ref({
-  required: (value: string) => !!value || "Requerido",
-  min: (v: string) => v.length >= 8 || "Minímo 8 caracteres",
-  emailValid: (v: string) => /.+@.+\..+/.test(v) || "E-mail deve ser válido",
-  confirmPassword: (v: string) => v === password.value || "Senhas não conferem"
-});
+const confirmPasswordRules = [
+  (v: string) => v === password.value || "Password must match"
+];
 
 const updateUser = async () => {
   if (!form) return;
@@ -39,7 +37,7 @@ const deleteUser = async () => {
     <v-container>
       <v-row>
         <v-col>
-          <v-text-field v-model="name" :rules="[rules.required]" class="mb-2" clearable label="Nome"
+          <v-text-field v-model="name" :rules="requiredRules" class="mb-2" clearable label="Nome"
             placeholder="Digite o seu nome"></v-text-field>
         </v-col>
       </v-row>
@@ -51,13 +49,13 @@ const deleteUser = async () => {
       </v-row>
       <v-row>
         <v-col>
-          <v-text-field v-model="password" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.min]"
-            :type="showPassword ? 'text' : 'password'" clearable label="Senha" placeholder="Digite a sua senha"
-            @click:append="showPassword = !showPassword"></v-text-field>
+          <v-text-field v-model="password" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            :rules="[passwordRules[1]]" :type="showPassword ? 'text' : 'password'" clearable label="Senha"
+            placeholder="Digite a sua senha" @click:append="showPassword = !showPassword"></v-text-field>
         </v-col>
         <v-col>
           <v-text-field v-model="confirmPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-            :rules="[rules.confirmPassword]" :type="showPassword ? 'text' : 'password'" clearable label="Confirmar senha"
+            :rules="confirmPasswordRules" :type="showPassword ? 'text' : 'password'" clearable label="Confirmar senha"
             placeholder="Confirme a sua senha" @click:append="showPassword = !showPassword"></v-text-field>
         </v-col>
       </v-row>

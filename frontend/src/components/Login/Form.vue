@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/store/users";
+import { emailRules, passwordRules } from "@/utils/FormRules";
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -11,12 +12,6 @@ const email = ref("");
 const password = ref("");
 const loading = ref(false);
 const showPassword = ref(false);
-const rules = ref({
-  required: (value: string) => !!value || "Required.",
-  min: (v: string) => v.length >= 8 || "Minímo 8 caracteres",
-  emailMatch: () => `The email and password you entered don't match`,
-  emailValid: (v: string) => /.+@.+\..+/.test(v) || "E-mail must be valid"
-});
 
 async function onSubmit() {
   if (!form) return;
@@ -34,15 +29,15 @@ async function onSubmit() {
     <v-container>
       <v-row>
         <v-col>
-          <v-text-field v-model="email" :readonly="loading" :rules="[rules.required, rules.emailValid]" class="mb-2"
-            clearable label="E-mail" placeholder="Digite o seu e-mail"></v-text-field>
+          <v-text-field v-model="email" :readonly="loading" :rules="emailRules" class="mb-2" clearable label="E-mail"
+            placeholder="Digite o seu e-mail"></v-text-field>
         </v-col>
       </v-row>
       <v-row>
         <v-col>
-          <v-text-field v-model="password" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-            :rules="[rules.required, rules.min]" :type="showPassword ? 'text' : 'password'" :readonly="loading" clearable
-            label="Senha" placeholder="Digite a sua senha" @click:append="showPassword = !showPassword"></v-text-field>
+          <v-text-field v-model="password" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="passwordRules"
+            :type="showPassword ? 'text' : 'password'" :readonly="loading" clearable label="Senha"
+            placeholder="Digite a sua senha" @click:append="showPassword = !showPassword"></v-text-field>
         </v-col>
       </v-row>
     </v-container>
