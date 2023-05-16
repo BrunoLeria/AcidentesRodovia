@@ -43,8 +43,8 @@ const onConfirm = async () => {
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="dialog = false">Cancel</v-btn>
-          <v-btn color="primary" text @click="onConfirm">Confirmar</v-btn>
+          <v-btn color="red-darken-1" text @click="dialog = false">Cancelar</v-btn>
+          <v-btn color="green-darken-1" text @click="onConfirm">Confirmar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
