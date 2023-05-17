@@ -47,12 +47,13 @@ export const useOccurrenceStore = defineStore("occurrence", {
         .then((response) => {
           if (response.status === 401) {
             alert("Sessão expirada, faça login novamente");
+            window.location.href = "/login";
             return false;
           }
           return response.json();
         })
         .then((result) => {
-          if (result === false) return false;
+          if (!result) return false;
           if (result.hasOwnProperty("message")) {
             alert(result.message);
             return false;
@@ -96,6 +97,7 @@ export const useOccurrenceStore = defineStore("occurrence", {
         .then((response) => {
           if (response.status === 401) {
             alert("Sessão expirada, faça login novamente");
+            window.location.href = "/login";
             return false;
           }
           return response.json();
@@ -108,7 +110,9 @@ export const useOccurrenceStore = defineStore("occurrence", {
             result.message === "Atualização da ocorrência realizada com sucesso"
           );
         });
-
+      if (result) {
+        location.reload();
+      }
       return result;
     },
     async deleteOccurrence(id: number): Promise<boolean> {
@@ -131,6 +135,7 @@ export const useOccurrenceStore = defineStore("occurrence", {
         .then((response) => {
           if (response.status === 401) {
             alert("Sessão expirada, faça login novamente");
+            window.location.href = "/login";
             return false;
           }
           return response.json();
@@ -143,7 +148,11 @@ export const useOccurrenceStore = defineStore("occurrence", {
             result.message === "Ocorrência excluida com sucesso"
           );
         });
-
+      if (result) {
+        this.$state.occurrences = this.$state.occurrences.filter(
+          (occurrence) => occurrence.id !== id
+        );
+      }
       return result;
     },
   },
