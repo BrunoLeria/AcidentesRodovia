@@ -44,7 +44,6 @@ if (props.occurrence) {
 
 async function onSubmit() {
   if (form.value) {
-
     emit("loading", true);
     if (!props.occurrence)
       await occurrencesStore.addOccurrence(
@@ -53,12 +52,16 @@ async function onSubmit() {
         parseInt(km.value),
       );
     else {
-      await occurrencesStore.updateOccurrence(
-        props.occurrence.id,
-        local.value,
-        occurrence_tipe.value,
-        parseInt(km.value),
-      );
+      if (props.occurrence.local != local.value || props.occurrence.occurrence_tipe != occurrence_tipe.value || props.occurrence.km != parseInt(km.value))
+        await occurrencesStore.updateOccurrence(
+          props.occurrence.id,
+          local.value,
+          occurrence_tipe.value,
+          parseInt(km.value),
+        );
+      else {
+        alert("Nenhuma alteração foi feita!");
+      }
     }
     emit("loading", false);
     emit("dialog", false);
