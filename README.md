@@ -46,8 +46,8 @@ pnpm dev
 ### Para iniciar o backend
 
 ```
-# nodemon
-nodemon
+# npm starts nodemon
+npm run start
 
 ```
 
