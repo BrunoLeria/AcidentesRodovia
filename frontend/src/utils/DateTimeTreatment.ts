@@ -36,14 +36,22 @@ export function getDateFull(date?: Date) {
     "dezembro",
   ];
   const DATE = new Date(date || Date.now());
-  const CURRENT_DATE = `${DATE.getDate()} de ${
+  const FINAL_DATE = `${DATE.getDate()} de ${
     MONTH_NAMES[DATE.getMonth()]
   } de ${DATE.getFullYear()}`;
-  return CURRENT_DATE;
+  return FINAL_DATE;
 }
 
 export function getToday(date?: Date) {
   const DATE = new Date(date || Date.now());
-  const CURRENT_DATE = `${DATE.getDate()}/${DATE.getMonth()}/${DATE.getFullYear()}`;
+  const CURRENT_DATE = `${DATE.getDate()}/${
+    DATE.getMonth() + 1
+  }/${DATE.getFullYear()}`;
   return CURRENT_DATE;
+}
+
+export function getDateForMongo(date: string) {
+  const DATE = date.match(/\d+/g);
+  const FINAL_DATE = DATE ? `${DATE[2]}/${parseInt(DATE[1])}/${DATE[0]}` : "";
+  return FINAL_DATE;
 }
