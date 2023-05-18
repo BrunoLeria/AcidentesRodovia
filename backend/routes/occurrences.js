@@ -6,9 +6,9 @@ router.post("/occurrences", verifyAuth, async (req, res) => {
   await occurrenceController.create(req, res);
 });
 
-// @route GET | /occurrences | public | Get all occurrences
-router.get("/occurrences", async (req, res) => {
-  await occurrenceController.findAll(res);
+// @route GET | /occurrences | public | Get a occurrence
+router.get("/occurrences/", async (req, res) => {
+  await occurrenceController.findOne(req, res);
 });
 
 // @route PUT | /occurrences/:id | private | Edit a occurrence

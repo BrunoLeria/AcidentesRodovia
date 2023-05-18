@@ -63,6 +63,36 @@ async function findAll(res) {
   }
 }
 
+async function find(req, res) {
+  try {
+    const filtered = Object.entries(req.query).filter(
+      ([key, value]) => value.length > 0
+    );
+    const query = Object.fromEntries(filtered);
+    if (query.km) query.km = parseInt(query.km);
+    const options = {
+      sort: { registered_at: 1 },
+    };
+    const cursor = occurrences.find(query, options);
+    const list = [];
+    await cursor.forEach((doc) => {
+      list.push(doc);
+    });
+
+    if ((await occurrences.countDocuments(query)) === 0) {
+      return res.status(404).send({
+        message: "Ocorrências do usuário informado não foram encontradas.",
+      });
+    }
+    return res.status(200).send(list);
+  } catch (err) {
+    return res.status(500).send({
+      message:
+        "Erro ao tentar encontrar as ocorrências no servidor. " + err.message,
+    });
+  }
+}
+
 async function update(req, res) {
   // Validate request
   const { id } = req.params;
@@ -137,4 +167,4 @@ async function remove(req, res) {
   }
 }
 
-module.exports = { create, findAll, update, remove };
+module.exports = { create, findAll, findOne: find, update, remove };
