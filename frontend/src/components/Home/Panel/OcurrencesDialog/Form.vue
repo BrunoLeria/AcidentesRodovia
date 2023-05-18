@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { useOccurrenceStore } from "../../../../store/occurrences";
 import { localRules, kmRules, requiredRules } from "../../../../utils/FormRules";
 import { IOccurrence } from "../../../../interfaces/occurrence.interface";
+import { occurrenceType } from "../../../../utils/TypeOfOccurrences";
 
 const emit = defineEmits(['loading', 'dialog'])
 
@@ -15,23 +16,6 @@ const props = defineProps({
 
 const occurrencesStore = useOccurrenceStore();
 const form = ref(false);
-const tiposAcidentes = ref([
-  "Colisão traseira",
-  "Saída de pista",
-  "Abalroamento lateral mesmo sentido",
-  "Choque com objeto fixo",
-  "Abalroamento transversal",
-  "Atropelamento",
-  "Abalroamento lateral sentido oposto",
-  "Atropelamento de animal",
-  "Capotagem",
-  "Tombamento",
-  "Colisão frontal",
-  "Atropelamento e fuga",
-  "Choque com veiculo estacionado",
-  "Outros tipos"
-]);
-
 const local = ref("");
 const occurrence_tipe = ref("");
 const km = ref("");
@@ -87,7 +71,7 @@ async function onSubmit() {
         </v-row>
         <v-row>
           <v-col cols="12">
-            <v-select v-model="occurrence_tipe" :items="tiposAcidentes" :rules="requiredRules" label="Tipo do acidente:"
+            <v-select v-model="occurrence_tipe" :items="occurrenceType" :rules="requiredRules" label="Tipo do acidente:"
               required></v-select>
           </v-col>
         </v-row>
