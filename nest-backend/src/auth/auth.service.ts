@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Response } from 'express';
-import { UserType } from '../users/schemas/user.schema';
+import { User } from '../users/schemas/user.schema';
 import { TokenPayload } from './interfaces/tokenPayload.interface';
 import { UsersService } from '../users/users.service';
 
@@ -15,9 +15,9 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async login(user: UserType, response: Response) {
+  async login(user: User): Promise<string> {
     const tokenPayload: TokenPayload = {
-      userId: user._id.toHexString(),
+      userId: user.userId,
     };
 
     const expires = new Date();
@@ -25,12 +25,7 @@ export class AuthService {
       expires.getSeconds() + this.configService.get('JWT_EXPIRATION'),
     );
 
-    const token = this.jwtService.sign(tokenPayload);
-
-    response.cookie('Authentication', token, {
-      httpOnly: true,
-      expires,
-    });
+    return this.jwtService.sign(tokenPayload);
   }
 
   logout(response: Response) {
