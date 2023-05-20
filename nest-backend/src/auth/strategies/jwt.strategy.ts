@@ -23,9 +23,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate({ userId }: TokenPayload) {
+  async validate({ userId }: TokenPayload, id: string) {
     try {
-      return await this.usersService.getUser(userId);
+      if (userId !== id)
+        throw new UnauthorizedException(
+          'You are not authorized to perform this action.',
+        );
+      return await this.usersService.getUser({ userId: userId });
     } catch (err) {
       throw new UnauthorizedException();
     }
