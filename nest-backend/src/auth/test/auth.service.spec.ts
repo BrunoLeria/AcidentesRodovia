@@ -6,7 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 import { userStub } from '../../users/test/stubs/user.stub';
 import { response } from 'express';
 import * as bcrypt from 'bcrypt';
-import { UserType } from '../../users/schemas/user.schema';
+import { User } from '../../users/schemas/user.schema';
 
 jest.mock('@nestjs/config');
 jest.mock('@nestjs/jwt');
@@ -80,7 +80,7 @@ describe('AuthService', () => {
   describe('validateUser', () => {
     describe('when validateUser is called', () => {
       let validateUserSpy: jest.SpyInstance;
-      let user: UserType;
+      let user: User;
 
       beforeEach(async () => {
         validateUserSpy = jest.spyOn(service, 'validateUser');
