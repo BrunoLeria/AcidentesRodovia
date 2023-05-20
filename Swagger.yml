@@ -1,12 +1,71 @@
 openapi: 3.0.0
 info:
-  version: v0.0.2
-  title: "SAOITR"
-  description: "Sistema de aviso de ocorrências de interrupção de tráfego em rodovias"
+  version: v0.0.1
+  title: 'SAOITR'
+  description: 'Sistema de aviso de ocorrências de interrupção de tráfego em rodovias'
+tags: 
+  - name: authentication
+    description: "Autenticação"
+  - name: users
+    description: "Endpoints sobre usuários"
+  - name: occurrences
+    description: "Enpoints sobre incidentes"
 paths:
-  /users:
-    get:
+  /logout:
+    post:
+      summary: "Realiza o logout no sistema"
+      tags: 
+        - authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+              required:
+                - id # ID DO USUÁRIO
+      security:
+        - auth: [] # Quando usa OAuth preenche, quando é através de token, deixar
+      responses:
+        200:
+          description: "Logout realizado com sucesso"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required: 
+                  - message
+        ## Campos inválidos
+        400:
+          description: "Informe um ID válido"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        ## Validação do Token
+        401:
+          description: "Essas credenciais não correspondem aos nossos registro."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: "Erro ao tentar encontrar o usuário no servidor"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      
+  /login:
+    post:
       summary: "Realiza o login no sistema"
+      tags:
+        - authentication
       requestBody:
         content:
           application/json:
@@ -15,8 +74,12 @@ paths:
               properties:
                 email:
                   type: string
+                  minLength: 10
+                  maxLength: 125
                 password:
                   type: string
+                  minLength: 2
+                  maxLength: 125
               required:
                 - email
                 - password
@@ -29,53 +92,44 @@ paths:
                 type: object
                 properties:
                   id:
-                    type: string
+                    type: integer
                   name:
                     type: string
                   email:
                     type: string
                   token:
                     type: string
-                required:
+                required: 
                   - id
                   - name
                   - email
                   - token
+        ## Campos inválidos
         400:
-          description: "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente."
+          description: "Campos inválidos."
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                  - message
-        401:
+                $ref: "#/components/schemas/Error"
+        ## Caso o e-mail não exista ou senha incorreta
+        401: 
           description: "Essas credenciais não correspondem aos nossos registros."
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                  - message
+                $ref: "#/components/schemas/Error"
+              
         500:
           description: "Erro ao tentar encontrar o usuário no servidor"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                  - message
+                $ref: "#/components/schemas/Error"
+  /users:
     post:
       summary: "Realiza o cadastro do usuário no sistema"
+      tags:
+        - users
       requestBody:
         content:
           application/json:
@@ -84,10 +138,16 @@ paths:
               properties:
                 name:
                   type: string
+                  minLength: 2
+                  maxLength: 125
                 email:
                   type: string
+                  minLength: 10
+                  maxLength: 125
                 password:
                   type: string
+                  minLength: 2
+                  maxLength: 125
               required:
                 - name
                 - email
@@ -98,272 +158,209 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                  name:
-                    type: string
-                  email:
-                    type: string
-                  password:
-                    type: string
-                  token:
-                    type: string
-                required:
-                  - id
-                  - name
-                  - email
-                  - token
+                $ref: "#/components/schemas/User"
         400:
-          description: "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente."
+          description: "Campos inválidos"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                  - message
+                $ref: "#/components/schemas/Error"
+        422:
+          description: "E-mail já utilizado"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"        
         500:
-          description: "Erro ao tentar cadastrar o usuário no servidor"
+          description: "Erro no servidor"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                  - message
+                $ref: "#/components/schemas/Error"
+  /users/{userId}:  
+    get:
+      summary: "Solicita os dados do usuário que possui o ID informado para editar"
+      tags:
+        - users
+      security:
+        - auth: [] # Quando usa OAuth preenche, quando é através de token, deixar
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: "ID do usuário"
+      responses:
+        200:
+          description: "Usuário encontrado com sucesso"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        400:
+          description: "Campos inválidos"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        401:
+          description: "Essas credenciais não correspondem aos nossos registros."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: "ErroErro no servidor"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
     put:
       summary: "Realiza a atualização do cadastro no sistema"
+      tags:
+        - users
+      security:
+        - auth: [] # Quando usa OAuth preenche, quando é através de token, deixar
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: "ID do usuário"
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                id:
-                  type: string
                 name:
                   type: string
+                  minLength: 2
+                  maxLength: 125
                 email:
                   type: string
+                  minLength: 10
+                  maxLength: 125
                 password:
                   type: string
-                token:
-                  type: string
+                  minLength: 2
+                  maxLength: 125
               required:
-                - id
                 - name
                 - email
                 - password
-                - token
       responses:
         200:
           description: "Atualização do usuário realizada com sucesso"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                  name:
-                    type: string
-                  email:
-                    type: string
-                  token:
-                    type: string
-                required:
-                  - id
-                  - name
-                  - email
-                  - token
-        204:
-          description: "Atualização do usuário realizada com sucesso"
+                $ref: "#/components/schemas/User"
         400:
-          description: "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente."
+          description: "Campos inválidos"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                  - message
-        403:
+                $ref: "#/components/schemas/Error"
+        401:
           description: "Essas credenciais não correspondem aos nossos registros."
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                  - message
-        500:
-          description: "Erro ao tentar atualizar o usuário no servidor"
+                $ref: "#/components/schemas/Error"
+        422:
+          description: "E-mail já utilizado"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                  - message
+                $ref: "#/components/schemas/Error"
+        500:
+          description: "Erro no servidor"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
     delete:
       summary: "Deleta o cadastro do sistema"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                token:
-                  type: string
-                id:
-                  type: string
-                password:
-                  type: string
-              required:
-                - token
-                - id
-                - password
+      tags:
+        - users
+      security:
+        - auth: [] # Quando usa OAuth preenche, quando é através de token, deixar o array vazio
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: "ID do usuário"
       responses:
-        204:
+        200:
           description: "Usuário excluido com sucesso"
         400:
-          description: "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente."
+          description: "Campos inválidos"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                  - message
-        403:
+                $ref: "#/components/schemas/Error"
+        401:
           description: "Essas credenciais não correspondem aos nossos registros."
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                  - message
+                $ref: "#/components/schemas/Error"
         500:
-          description: "Erro ao tentar excluir o usuário no servidor"
+          description: "Erro no servidor"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                  - message
+                $ref: "#/components/schemas/Error"
   /occurrences:
     get:
-      summary: "Solicita a listagem de todas as ocorrências ou se especificar um id e um token no corpo, o servidor busca as ocorrências de um único usuário."
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                token:
-                  type: string
-                user_id:
-                  type: string
+      summary: "Solicita a listagem de todas as ocorrências"
+      tags:
+        - occurrences
       responses:
         200:
           description: "Sucesso"
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Ocurrences"
-        400:
-          description: "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente."
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                  - message
-        403:
-          description: "Você não tem permissão para acessar esse recurso."
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                  - message
-        404:
-          description: "Ocorrências do usuário informado não foram encontradas."
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                  - message
+                $ref: "#/components/schemas/Occurrences"
         500:
-          description: "Erro ao tentar buscar as ocorrências no servidor"
+          description: "Erro no servidor"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                  - message
+                $ref: "#/components/schemas/Error"
     post:
       summary: "Realiza o cadastro da ocorrência no sistema"
+      tags:
+        - occurrences
+      security:
+        - auth: [] # Quando usa OAuth preenche, quando é através de token, deixar o array vazio
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                date:
-                  type: string
-                time:
-                  type: string
+                registered_at: 
+                  type: string #datetime
                 local:
                   type: string
-                occurrence_tipe:
-                  type: string
+                occurrence_type:
+                  type: integer
                 km:
                   type: integer
-                token:
-                  type: string
                 user_id:
-                  type: string
-              required:
-                - date
-                - time
+                  type: integer
+              required:                
+                - registered_at
                 - local
-                - occurrence_tipe
+                - occurrence_type
                 - km
-                - token
                 - user_id
       responses:
         201:
@@ -371,207 +368,175 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  date:
-                    type: string
-                  time:
-                    type: string
-                  local:
-                    type: string
-                  occurrence_tipe:
-                    type: string
-                  km:
-                    type: integer
-                  token:
-                    type: string
-                  user_id:
-                    type: string
-                required:
-                  - date
-                  - time
-                  - local
-                  - occurrence_tipe
-                  - km
-                  - token
-                  - user_id
+                $ref: "#/components/schemas/Occurrence"
         400:
-          description: "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente."
+          description: "Campos inválidos"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                  - message
+                $ref: "#/components/schemas/Error"
+        401:
+          description: "Essas credenciais não correspondem aos nossos registros."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         500:
-          description: "Erro ao tentar cadastrar a ocorrência no servidor"
+          description: "Erro no servidor"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                  - message
+                $ref: "#/components/schemas/Error"
+  /occurrences/{occurrenceId}: 
     put:
-      summary: "Realiza a atualização da ocorrência no sistema"
-      requestBody:
+      summary: "Salva as alterações da edição dos dados do ocorrência"
+      tags: 
+        - occurrences
+      security:
+        - auth: [] # Quando usa OAuth preenche, quando é através de token, deixar
+      requestBody: 
         content:
           application/json:
             schema:
               type: object
               properties:
-                token:
-                  type: string
-                date:
-                  type: string
-                time:
-                  type: string
+                registered_at: 
+                  type: string #datetime
                 local:
                   type: string
-                occurrence_tipe:
+                occurrence_type:
                   type: string
                 km:
                   type: integer
                 user_id:
-                  type: string
-              required:
-                - token
-                - id
+                  type: integer
+              required:                
+                - registered_at
+                - local
+                - occurrence_tipe
+                - km
                 - user_id
+      parameters: 
+        - in: path
+          name: occurrenceId
+          schema:
+            type: integer
+          required: true
+          description: "ID do incidente que será editado"
       responses:
         200:
           description: "Atualização da ocorrência realizada com sucesso"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  token:
-                    type: string
-                  id:
-                    type: string
-                  user_id:
-                    type: string
-                required:
-                  - token
-                  - id
-                  - user_id
-        204:
-          description: "Atualização da ocorrência realizada com sucesso"
+                $ref: "#/components/schemas/Occurrence"
         400:
-          description: "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente."
+          description: "Campos inválidos"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                  - message
-        403:
+                $ref: "#/components/schemas/Error"
+        401:
           description: "Essas credenciais não correspondem aos nossos registros."
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                  - message
+                $ref: "#/components/schemas/Error"
         500:
-          description: "Erro ao tentar atualizar a ocorrência no servidor"
+          description: "Erro no servidor"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                  - message
+                $ref: "#/components/schemas/Error"
     delete:
       summary: "Deleta a ocorrência do sistema"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                token:
-                  type: string
-                id:
-                  type: string
-                user_id:
-                  type: string
-              required:
-                - token
-                - id
-                - user_id
+      tags:
+        - occurrences
+      security:
+        - auth: [] # Quando usa OAuth preenche, quando é através de token, deixar
+      parameters: 
+        - in: path
+          name: occurrenceId
+          schema:
+            type: integer
+          required: true
+          description: "ID do incidente que será editado"
       responses:
-        204:
+        200:
           description: "Ocorrência excluida com sucesso"
         400:
-          description: "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente."
+          description: "Campos inválidos"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                  - message
-        403:
+                $ref: "#/components/schemas/Error"
+        401:
           description: "Essas credenciais não correspondem aos nossos registros."
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                  - message
+                $ref: "#/components/schemas/Error"
         500:
-          description: "Erro ao tentar excluir a ocorrência no servidor"
+          description: "Erro no servidor"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                required:
-                  - message
+                $ref: "#/components/schemas/Error"
+  /occurrences/users/{userId}:
+    get:
+      summary: "Solicita a listagem de todas as ocorrências de um determinado usuário"
+      tags:
+        - occurrences
+      parameters: 
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: "ID do usuário"
+      responses:
+        200:
+          description: "Sucesso"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Occurrences"
+        400:
+          description: "Campos inválidos"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        401:
+          description: "Essas credenciais não correspondem aos nossos registros."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: "Erro no servidor"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 components:
   schemas:
     User:
       type: object
       properties:
         id:
-          type: string
+          type: integer
         name:
           type: string
         email:
-          type: string
-        token:
           type: string
     Occurrence:
       type: object
       properties:
         id:
           type: integer
-        date:
-          type: string
-        time:
-          type: string
+        registered_at:
+          type: string #datetime
         local:
           type: string
         occurrence_type:
@@ -581,9 +546,21 @@ components:
         token:
           type: string
         user_id:
-          type: string
+          type: integer
 
-    Ocurrences:
+    Occurrences:
       type: array
       items:
-        $ref: "#components/schemas/Ocurrence"
+        $ref: "#/components/schemas/Occurrence"
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+  securitySchemes:
+    auth:
+      type: http
+      scheme: bearer # Http scheme para autorização
+      bearerFormat: JWT
