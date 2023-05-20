@@ -12,7 +12,9 @@ export class UsersService {
   async createUser(createUserRequest: CreateUserDto): Promise<User> {
     const session = await this.usersRepository.startTransaction();
     try {
-      const newUser = { userId: '1', ...createUserRequest };
+      const userId = (await this.usersRepository.countDocuments()) + 1;
+
+      const newUser = { userId: `${userId}`, ...createUserRequest };
       newUser.password = await bcrypt.hash(newUser.password, 10);
       const result = await this.usersRepository.create(
         newUser,
@@ -29,24 +31,18 @@ export class UsersService {
   async getUsers(): Promise<User[]> {
     return this.usersRepository.find({});
   }
-  async getUser(id: string): Promise<User> {
-    return this.usersRepository.findOne({ userId: id });
+  async getUser(getUserArgs: Partial<User>): Promise<User> {
+    return this.usersRepository.findOne(getUserArgs);
   }
-  async updateUser(
-    id: string,
-    updateUserRequest: UpdateUserDto,
-  ): Promise<User> {
+  async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     const session = await this.usersRepository.startTransaction();
     try {
-      if (updateUserRequest.password) {
-        updateUserRequest.password = await bcrypt.hash(
-          updateUserRequest.password,
-          10,
-        );
+      if (updateUserDto.password) {
+        updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
       }
       const result = await this.usersRepository.findOneAndUpdate(
-        { userId: id },
-        updateUserRequest,
+        { userId: parseInt(id) },
+        updateUserDto,
       );
       await session.commitTransaction();
       return result;
