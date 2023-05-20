@@ -97,4 +97,8 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
     session.startTransaction();
     return session;
   }
+
+  async countDocuments() {
+    return this.model.countDocuments();
+  }
 }
