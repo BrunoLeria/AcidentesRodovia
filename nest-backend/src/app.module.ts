@@ -3,6 +3,7 @@ import { UsersModule } from './users/users.module';
 import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { OccurrencesModule } from './occurrences/occurrences.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -21,6 +22,7 @@ import * as Joi from 'joi';
     DatabaseModule,
     UsersModule,
     AuthModule,
+    OccurrencesModule,
   ],
 })
 export class AppModule {}
