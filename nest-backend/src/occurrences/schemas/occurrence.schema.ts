@@ -4,7 +4,7 @@ import { AbstractDocument } from '../../database/abstract.schema';
 @Schema()
 export class Occurrence extends AbstractDocument {
   @Prop()
-  occurrenceId: string;
+  id: number;
 
   @Prop()
   registered_at: string;
@@ -19,7 +19,7 @@ export class Occurrence extends AbstractDocument {
   km: number;
 
   @Prop()
-  userId: string;
+  user_id: number;
 }
 
 export const OccurrenceSchema = SchemaFactory.createForClass(Occurrence);

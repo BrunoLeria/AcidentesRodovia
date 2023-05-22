@@ -19,5 +19,5 @@ export class CreateOccurrenceDto {
 
   @IsNumber()
   @IsNotEmpty()
-  userId;
+  user_id;
 }

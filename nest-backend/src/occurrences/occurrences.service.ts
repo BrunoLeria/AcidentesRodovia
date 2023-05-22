@@ -17,7 +17,7 @@ export class OccurrencesService {
         (await this.occurrencesRepository.countDocuments()) + 1;
 
       const newOccurrence = {
-        occurrenceId: `${occurrenceId}`,
+        id: occurrenceId,
         ...createOccurrenceDto,
       };
       const result = await this.occurrencesRepository.create(newOccurrence);
