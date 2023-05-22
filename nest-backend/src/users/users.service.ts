@@ -14,7 +14,7 @@ export class UsersService {
     try {
       const userId = (await this.usersRepository.countDocuments()) + 1;
 
-      const newUser = { userId: `${userId}`, ...createUserRequest };
+      const newUser = { id: userId, ...createUserRequest };
       newUser.password = await bcrypt.hash(newUser.password, 10);
       const result = await this.usersRepository.create(
         newUser,
@@ -41,7 +41,7 @@ export class UsersService {
         updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
       }
       const result = await this.usersRepository.findOneAndUpdate(
-        { userId: parseInt(id) },
+        { id: parseInt(id) },
         updateUserDto,
       );
       await session.commitTransaction();
@@ -56,7 +56,7 @@ export class UsersService {
     const session = await this.usersRepository.startTransaction();
     try {
       const result = await this.usersRepository.findOneAndDelete({
-        userId: id,
+        id: id,
       });
       await session.commitTransaction();
       return result;

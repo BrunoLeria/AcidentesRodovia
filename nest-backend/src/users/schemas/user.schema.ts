@@ -4,7 +4,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 @Schema({ versionKey: false })
 export class User extends AbstractDocument {
   @Prop()
-  userId: string;
+  id: number;
 
   @Prop()
   name: string;
