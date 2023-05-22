@@ -5,14 +5,17 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UsersService } from '../../users/users.service';
 import { TokenPayload } from '../interfaces/tokenPayload.interface';
 import { Request } from 'express';
+import { OccurrencesService } from '../../occurrences/occurrences.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     configService: ConfigService,
     private readonly usersService: UsersService,
+    private readonly occurrencesService: OccurrencesService,
   ) {
     super({
+      passReqToCallback: true,
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
           const [type, token] = request.headers.authorization?.split(' ') ?? [];
@@ -23,13 +26,23 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate({ userId }: TokenPayload, id: string) {
+  async validate(request: Request, { userId }: TokenPayload) {
     try {
-      if (userId !== id)
-        throw new UnauthorizedException(
-          'You are not authorized to perform this action.',
-        );
-      return await this.usersService.getUser({ userId: userId });
+      const isOccurrence = request.originalUrl.includes('/occurrences');
+      const isOwner = request?.params?.id === userId;
+
+      if (!isOccurrence && !isOwner) {
+        throw new UnauthorizedException();
+      }
+
+      if (isOccurrence) {
+        const body = request.body;
+        if (body && body.user_id !== parseInt(userId)) {
+          throw new UnauthorizedException();
+        }
+      }
+
+      return await this.usersService.getUser({ id: parseInt(userId) });
     } catch (err) {
       throw new UnauthorizedException();
     }
