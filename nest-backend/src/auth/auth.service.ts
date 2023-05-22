@@ -17,7 +17,7 @@ export class AuthService {
 
   async login(user: User): Promise<string> {
     const tokenPayload: TokenPayload = {
-      userId: user.userId,
+      userId: `${user.id}`,
     };
 
     const expires = new Date();
@@ -32,6 +32,7 @@ export class AuthService {
     response.cookie('Authentication', '', {
       httpOnly: true,
     });
+    response.send({ token: '' });
   }
 
   async validateUser(email: string, password: string) {
@@ -46,6 +47,7 @@ export class AuthService {
 
   async validatePassword(password: string, hashedPassword: string) {
     const passwordIsValid = await bcrypt.compare(password, hashedPassword);
+    console.log(passwordIsValid);
     if (!passwordIsValid) {
       throw new UnauthorizedException('Credentials are not valid.');
     }
