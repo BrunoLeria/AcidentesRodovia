@@ -413,7 +413,7 @@ paths:
               required:                
                 - registered_at
                 - local
-                - occurrence_tipe
+                - occurrence_type
                 - km
                 - user_id
       parameters: 
