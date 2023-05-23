@@ -32,7 +32,6 @@ export class AuthService {
     response.cookie('Authentication', '', {
       httpOnly: true,
     });
-    console.log('logout realizado com sucesso');
     return { message: 'Logout realizado com sucesso' };
   }
 
