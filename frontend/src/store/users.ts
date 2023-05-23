@@ -1,6 +1,7 @@
 import { IUser } from "@/interfaces/user.interface";
 import { defineStore } from "pinia";
 import { url } from "@/utils/HttpRequestInfo";
+import { Md5 } from "ts-md5";
 
 export const useUserStore = defineStore("user", {
   state: () => {
@@ -16,7 +17,7 @@ export const useUserStore = defineStore("user", {
 
       const raw = JSON.stringify({
         email: email,
-        password: password,
+        password: Md5.hashStr(password),
       });
 
       const myHeaders = new Headers();
@@ -91,7 +92,7 @@ export const useUserStore = defineStore("user", {
       const raw = JSON.stringify({
         name: name,
         email: email,
-        password: password,
+        password: Md5.hashStr(password),
       });
 
       const requestOptions: RequestInit = {
