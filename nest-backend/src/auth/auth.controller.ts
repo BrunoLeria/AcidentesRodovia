@@ -22,9 +22,9 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('')
+  @Post('logout')
+  @HttpCode(200)
   async logout(@Res({ passthrough: true }) response: Response) {
     await this.authService.logout(response);
-    response.send();
   }
 }
