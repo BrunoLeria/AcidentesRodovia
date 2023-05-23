@@ -54,6 +54,7 @@ export const useUserStore = defineStore("user", {
 
     async logout(): Promise<boolean> {
       const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
       myHeaders.append(
         "Authorization",
         "Bearer " + localStorage.getItem("token") || "no token found"
