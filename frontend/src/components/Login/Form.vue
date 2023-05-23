@@ -29,15 +29,30 @@ async function onSubmit() {
     <v-container>
       <v-row>
         <v-col>
-          <v-text-field v-model="email" :readonly="loading" :rules="emailRules" class="mb-2" clearable label="E-mail"
-            placeholder="Digite o seu e-mail"></v-text-field>
+          <v-text-field
+            v-model="email"
+            :readonly="loading"
+            :rules="emailRules"
+            class="mb-2"
+            clearable
+            label="E-mail"
+            placeholder="Digite o seu e-mail"
+          ></v-text-field>
         </v-col>
       </v-row>
       <v-row>
         <v-col>
-          <v-text-field v-model="password" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="passwordRules"
-            :type="showPassword ? 'text' : 'password'" :readonly="loading" clearable label="Senha"
-            placeholder="Digite a sua senha" @click:append="showPassword = !showPassword"></v-text-field>
+          <v-text-field
+            v-model="password"
+            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            :rules="passwordRules"
+            :type="showPassword ? 'text' : 'password'"
+            :readonly="loading"
+            clearable
+            label="Senha"
+            placeholder="Digite a sua senha"
+            @click:append="showPassword = !showPassword"
+          ></v-text-field>
         </v-col>
       </v-row>
     </v-container>
@@ -45,14 +60,28 @@ async function onSubmit() {
     <v-container>
       <v-row align="center">
         <v-col>
-          <v-btn :loading="loading" block color="blue-darken-4" size="large" type="button"
-            @click="router.push({ name: 'Register' })" variant="elevated">
+          <v-btn
+            :loading="loading"
+            block
+            color="blue-darken-4"
+            size="large"
+            type="button"
+            @click="router.push({ name: 'Register' })"
+            variant="elevated"
+          >
             Register
           </v-btn>
         </v-col>
         <v-col>
-          <v-btn :disabled="!form" :loading="loading" block color="green-darken-4" size="large" type="submit"
-            variant="elevated">
+          <v-btn
+            :disabled="!form"
+            :loading="loading"
+            block
+            color="green-darken-4"
+            size="large"
+            type="submit"
+            variant="elevated"
+          >
             Sign In
           </v-btn>
         </v-col>
