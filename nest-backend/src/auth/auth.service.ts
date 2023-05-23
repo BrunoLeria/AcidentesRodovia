@@ -32,7 +32,7 @@ export class AuthService {
     response.cookie('Authentication', '', {
       httpOnly: true,
     });
-    response.send({ token: '' });
+    return { message: 'Logged out successfully.' };
   }
 
   async validateUser(email: string, password: string) {
