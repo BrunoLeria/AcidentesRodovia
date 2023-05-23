@@ -29,9 +29,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(request: Request, { userId }: TokenPayload) {
     try {
       const isOccurrence = request.originalUrl.includes('/occurrences');
+      const isLogout = request.originalUrl.includes('/logout');
       const isOwner = request?.params?.id === userId;
 
-      if (!isOccurrence && !isOwner) {
+      if (!isOccurrence && !isOwner && !isLogout) {
         throw new UnauthorizedException();
       }
 
