@@ -2,7 +2,6 @@
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 import { useUserStore } from "@/store/users";
-import { IUser } from "@/interfaces/user.interface";
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -16,10 +15,9 @@ const items = ref([
 	{ title: "About", link: "/about", show: true }
 ]);
 
-const logout = () => {
-	localStorage.setItem("token", "");
-	userStore.user = {} as IUser;
-	location.reload();
+const logout = async () => {
+	if (await userStore.logout())
+		location.reload();
 };
 </script>
 

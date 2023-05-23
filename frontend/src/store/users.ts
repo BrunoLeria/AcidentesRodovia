@@ -1,5 +1,6 @@
 import { IUser } from "@/interfaces/user.interface";
 import { defineStore } from "pinia";
+import { url } from "@/utils/HttpRequestInfo";
 
 export const useUserStore = defineStore("user", {
   state: () => {
@@ -28,7 +29,7 @@ export const useUserStore = defineStore("user", {
         redirect: "follow",
       };
 
-      const result = await fetch("http://localhost:5000/login", requestOptions)
+      const result = await fetch(url + "/login", requestOptions)
         .then((response) => {
           return response.json();
         })
@@ -38,12 +39,47 @@ export const useUserStore = defineStore("user", {
             return false;
           } else {
             localStorage.setItem("token", result.token);
-            this.$state.user = result.user;
+            this.$state.user = {
+              id: result.id,
+              name: result.name,
+              email: result.email,
+              password: "",
+            };
             return true;
           }
         });
       return result;
     },
+
+    async logout(): Promise<boolean> {
+      const myHeaders = new Headers();
+      myHeaders.append(
+        "Authorization",
+        "Bearer " + localStorage.getItem("token") || "no token found"
+      );
+      myHeaders.append("Cookie", "Authentication=");
+
+      const raw = JSON.stringify({
+        id: this.user.id,
+      });
+
+      const requestOptions: RequestInit = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+
+      fetch(url + "/logout", requestOptions)
+        .then((response) => console.log(response))
+        .then((result) => console.log(result))
+        .catch((error) => console.log(error));
+
+      localStorage.setItem("token", "");
+      this.$state.user = {} as IUser;
+      return true;
+    },
+
     async addUser(
       name: string,
       email: string,
@@ -65,7 +101,7 @@ export const useUserStore = defineStore("user", {
         redirect: "follow",
       };
 
-      const result = await fetch("http://localhost:5000/users", requestOptions)
+      const result = await fetch(url + "/users", requestOptions)
         .then((response) => {
           return response.json();
         })
@@ -88,8 +124,8 @@ export const useUserStore = defineStore("user", {
     ): Promise<boolean> {
       const myHeaders = new Headers();
       myHeaders.append(
-        "x-token",
-        localStorage.getItem("token") || "no token found"
+        "Authorization",
+        "Bearer " + localStorage.getItem("token") || "no token found"
       );
       myHeaders.append("Content-Type", "application/json");
 
@@ -106,10 +142,7 @@ export const useUserStore = defineStore("user", {
         redirect: "follow",
       };
 
-      const result = await fetch(
-        `http://localhost:5000/users/${this.user.id}`,
-        requestOptions
-      )
+      const result = await fetch(url + `/users/${this.user.id}`, requestOptions)
         .then((response) => {
           return response.json();
         })
@@ -134,8 +167,8 @@ export const useUserStore = defineStore("user", {
     async deleteUser(): Promise<boolean> {
       const myHeaders = new Headers();
       myHeaders.append(
-        "x-token",
-        localStorage.getItem("token") || "no token found"
+        "Authorization",
+        "Bearer " + localStorage.getItem("token") || "no token found"
       );
 
       const requestOptions: RequestInit = {
@@ -144,10 +177,7 @@ export const useUserStore = defineStore("user", {
         redirect: "follow",
       };
 
-      const result = await fetch(
-        `http://localhost:5000/users/${this.user.id}`,
-        requestOptions
-      )
+      const result = await fetch(url + `/users/${this.user.id}`, requestOptions)
         .then((response) => {
           return response.json();
         })
