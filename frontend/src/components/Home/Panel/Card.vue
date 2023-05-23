@@ -3,6 +3,8 @@ import { IOccurrence } from "@/interfaces/occurrence.interface";
 import OccurrencesDialog from './OccurrencesDialog.vue';
 import ConfirmDialog from "./ConfirmDialog.vue";
 import { useOccurrenceStore } from "@/store/occurrences";
+import { useUserStore } from "@/store/users";
+import { ref } from 'vue';
 
 const props = defineProps({
     occurrence: {
@@ -15,6 +17,8 @@ const props = defineProps({
     },
 });
 const ocorrenceStore = useOccurrenceStore();
+const userStore = useUserStore();
+const showOptions = ref(userStore.user.id == props.occurrence.user_id);
 
 const deleteOccurrence = async () => {
     await ocorrenceStore.deleteOccurrence(props.occurrence.id);
@@ -29,11 +33,11 @@ const deleteOccurrence = async () => {
                 <v-col cols="7">
                     {{ props.occurrence.local }}
                 </v-col>
-                <v-col cols="2">
+                <v-col cols="2" v-show="showOptions">
                     <occurrences-dialog :occurrence="props.occurrence" variant="text" icon="mdi-pencil"
                         title="Editar sua ocorrência" />
                 </v-col>
-                <v-col cols="3">
+                <v-col cols="3" v-show="showOptions">
                     <confirm-dialog :function="deleteOccurrence" text="Deseja excluir a ocorrência?" icon="mdi-delete"
                         variant="text" />
                 </v-col>
@@ -49,7 +53,7 @@ const deleteOccurrence = async () => {
             <br />
             Pelo usuário: {{ props.occurrence.user_id }}
             <br />
-            Tipo de ocorrência: {{ props.occurrence.occurrence_tipe }}
+            Tipo de ocorrência: {{ props.occurrence.occurrence_type }}
         </v-card-text>
     </v-card>
 </template>
