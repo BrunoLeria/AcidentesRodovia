@@ -47,7 +47,6 @@ export class AuthService {
 
   async validatePassword(password: string, hashedPassword: string) {
     const passwordIsValid = await bcrypt.compare(password, hashedPassword);
-    console.log(passwordIsValid);
     if (!passwordIsValid) {
       throw new UnauthorizedException('Credentials are not valid.');
     }
