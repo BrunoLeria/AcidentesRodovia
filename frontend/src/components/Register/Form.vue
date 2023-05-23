@@ -25,9 +25,9 @@ async function onSubmit() {
   await userStore.addUser(name.value, email.value, password.value).then(async (response) => {
     if (response) {
       const result = await userStore.login(email.value, password.value);
-      loading.value = false;
       if (result) location.reload();
     }
+    loading.value = false;
   });
 }
 </script>
