@@ -6,6 +6,7 @@ import { getRandomIntInclusive } from "@/utils/NumbersTreatment";
 import { onMounted } from "vue";
 import OccurrencesDialog from "./Panel/OccurrencesDialog.vue";
 import { colors } from "@/utils/Colors";
+import { url } from "@/utils/HttpRequestInfo";
 
 const occurrencesStore = useOccurrenceStore();
 const hasToken = localStorage.getItem("token") !== "";
@@ -21,7 +22,7 @@ const getOccurrences = async () => {
 	};
 
 	await fetch(
-		"http://localhost:5000/occurrences",
+		url + "/occurrences",
 		requestOptions
 	)
 		.then((response) => {
