@@ -18,13 +18,18 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
   ) {
     const token = await this.authService.login(user);
-    response.send({ token: token, ...user });
+    response.send({
+      token: token,
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    });
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('logout')
   @HttpCode(200)
   async logout(@Res({ passthrough: true }) response: Response) {
-    await this.authService.logout(response);
+    return await this.authService.logout(response);
   }
 }

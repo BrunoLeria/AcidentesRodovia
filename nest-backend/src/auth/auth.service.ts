@@ -28,11 +28,12 @@ export class AuthService {
     return this.jwtService.sign(tokenPayload);
   }
 
-  logout(response: Response) {
+  async logout(response: Response) {
     response.cookie('Authentication', '', {
       httpOnly: true,
     });
-    return { message: 'Logged out successfully.' };
+    console.log('logout realizado com sucesso');
+    return { message: 'Logout realizado com sucesso' };
   }
 
   async validateUser(email: string, password: string) {
