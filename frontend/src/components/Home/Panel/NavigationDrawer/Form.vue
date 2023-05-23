@@ -10,7 +10,7 @@ const props = defineProps({
 const occurrencesStore = useOccurrenceStore();
 const date = ref("");
 const local = ref("");
-const occurrence_tipe = ref("");
+const occurrence_type = ref("");
 const km = ref("");
 
 watch(date, async () => {
@@ -25,9 +25,9 @@ watch(local, async () => {
   }
 });
 
-watch(occurrence_tipe, async () => {
-  if (occurrence_tipe.value === null) {
-    occurrence_tipe.value = "";
+watch(occurrence_type, async () => {
+  if (occurrence_type.value === null) {
+    occurrence_type.value = "";
   }
 });
 
@@ -40,7 +40,7 @@ async function getOccurrences() {
   await occurrencesStore.getOccurrences(
     date.value,
     local.value,
-    occurrence_tipe.value,
+    occurrence_type.value,
     km.value,
   );
 }
@@ -48,7 +48,7 @@ async function getOccurrences() {
 async function reset() {
   date.value = "";
   local.value = "";
-  occurrence_tipe.value = "";
+  occurrence_type.value = "";
   km.value = "";
   await getOccurrences();
 }
@@ -64,7 +64,7 @@ async function reset() {
     <v-label class="mx-5">Local:</v-label>
     <v-text-field clearable v-model="local" variant="outlined" v-show="!props.rail" class="mx-5 mb-5" />
     <v-label class="mx-5">Tipo do incidente:</v-label>
-    <v-combobox clearable v-model="occurrence_tipe" :items="occurrenceType" variant="outlined" v-show="!props.rail"
+    <v-combobox clearable v-model="occurrence_type" :items="occurrenceType" variant="outlined" v-show="!props.rail"
       class="mx-5 mb-5" />
     <v-label class="mx-5">KM:</v-label>
     <v-text-field clearable v-model="km" variant="outlined" v-show="!props.rail" class="mx-5 mb-5" />

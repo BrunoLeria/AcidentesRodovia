@@ -17,12 +17,12 @@ const props = defineProps({
 const occurrencesStore = useOccurrenceStore();
 const form = ref(false);
 const local = ref("");
-const occurrence_tipe = ref("");
+const occurrence_type = ref("");
 const km = ref("");
 
 if (props.occurrence) {
   local.value = props.occurrence.local;
-  occurrence_tipe.value = props.occurrence.occurrence_tipe;
+  occurrence_type.value = props.occurrence.occurrence_type;
   km.value = props.occurrence.km.toString();
 }
 
@@ -32,15 +32,15 @@ async function onSubmit() {
     if (!props.occurrence)
       await occurrencesStore.addOccurrence(
         local.value,
-        occurrence_tipe.value,
+        occurrence_type.value,
         parseInt(km.value),
       );
     else {
-      if (props.occurrence.local != local.value || props.occurrence.occurrence_tipe != occurrence_tipe.value || props.occurrence.km != parseInt(km.value))
+      if (props.occurrence.local != local.value || props.occurrence.occurrence_type != occurrence_type.value || props.occurrence.km != parseInt(km.value))
         await occurrencesStore.updateOccurrence(
           props.occurrence.id,
           local.value,
-          occurrence_tipe.value,
+          occurrence_type.value,
           parseInt(km.value),
         );
       else {
@@ -71,7 +71,7 @@ async function onSubmit() {
         </v-row>
         <v-row>
           <v-col cols="12">
-            <v-select v-model="occurrence_tipe" :items="occurrenceType" :rules="requiredRules" label="Tipo do acidente:"
+            <v-select v-model="occurrence_type" :items="occurrenceType" :rules="requiredRules" label="Tipo do acidente:"
               required></v-select>
           </v-col>
         </v-row>

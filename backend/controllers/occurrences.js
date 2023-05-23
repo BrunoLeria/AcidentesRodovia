@@ -3,8 +3,8 @@ const { occurrences } = require("../database/connection.js");
 // Create and Save a new Occurrence
 async function create(req, res) {
   // Validate request
-  const { registered_at, local, occurrence_tipe, km, user_id } = req.body;
-  if (!registered_at || !local || !occurrence_tipe || !km || !user_id) {
+  const { registered_at, local, occurrence_type, km, user_id } = req.body;
+  if (!registered_at || !local || !occurrence_type || !km || !user_id) {
     return res.status(400).json({
       message:
         "As credenciais informadas não correspondem ao modelo correto da requisição. Por favor verifique os dados informados e tente novamente.",
@@ -18,7 +18,7 @@ async function create(req, res) {
       id: id,
       registered_at: registered_at,
       local: local,
-      occurrence_tipe: occurrence_tipe,
+      occurrence_type: occurrence_type,
       km: km,
       user_id: user_id,
     };
@@ -107,15 +107,15 @@ async function update(req, res) {
     // create a filter for a occurrence to update
     const filter = { id: parseInt(id) };
     const oldOccurrence = await occurrences.findOne(filter);
-    const { local, occurrence_tipe, km } = req.body;
+    const { local, occurrence_type, km } = req.body;
     // create a document that sets the plot of the movie
     const updateDoc = {
       $set: {
         local: local === "" ? oldOccurrence.local : local,
-        occurrence_tipe:
-          occurrence_tipe === ""
-            ? oldOccurrence.occurrence_tipe
-            : occurrence_tipe,
+        occurrence_type:
+          occurrence_type === ""
+            ? oldOccurrence.occurrence_type
+            : occurrence_type,
         km: km === "" ? oldOccurrence.km : km,
       },
     };
