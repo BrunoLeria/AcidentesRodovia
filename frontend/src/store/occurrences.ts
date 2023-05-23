@@ -3,6 +3,7 @@ import { IOccurrence } from "@/interfaces/occurrence.interface";
 import { useUserStore } from "./users";
 import { getToday } from "@/utils/DateTimeTreatment";
 import { getDateForMongo } from "../utils/DateTimeTreatment";
+import { url } from "@/utils/HttpRequestInfo";
 
 const userStore = useUserStore();
 
@@ -16,20 +17,20 @@ export const useOccurrenceStore = defineStore("occurrence", {
   actions: {
     async addOccurrence(
       local: string,
-      occurrence_tipe: string,
+      occurrence_type: string,
       km: number
     ): Promise<boolean> {
       const myHeaders = new Headers();
       myHeaders.append(
-        "x-token",
-        localStorage.getItem("token") || "no token found"
+        "Authorization",
+        "Bearer " + localStorage.getItem("token") || "no token found"
       );
       myHeaders.append("Content-Type", "application/json");
 
       const raw = JSON.stringify({
         registered_at: getToday(),
         local: local,
-        occurrence_tipe: occurrence_tipe,
+        occurrence_type: occurrence_type,
         km: km,
         user_id: userStore.user.id,
       });
@@ -41,10 +42,7 @@ export const useOccurrenceStore = defineStore("occurrence", {
         redirect: "follow",
       };
 
-      const result = await fetch(
-        "http://localhost:5000/occurrences",
-        requestOptions
-      )
+      const result = await fetch(url + "/occurrences", requestOptions)
         .then((response) => {
           if (response.status === 401) {
             alert("Sessão expirada, faça login novamente");
@@ -69,19 +67,19 @@ export const useOccurrenceStore = defineStore("occurrence", {
     async updateOccurrence(
       id: number,
       local: string,
-      occurrence_tipe: string,
+      occurrence_type: string,
       km: number
     ): Promise<boolean> {
       const myHeaders = new Headers();
       myHeaders.append(
-        "x-token",
-        localStorage.getItem("token") || "no token found"
+        "Authorization",
+        "Bearer " + localStorage.getItem("token") || "no token found"
       );
       myHeaders.append("Content-Type", "application/json");
 
       const raw = JSON.stringify({
         local: local,
-        occurrence_tipe: occurrence_tipe,
+        occurrence_type: occurrence_type,
         km: km,
       });
 
@@ -92,10 +90,7 @@ export const useOccurrenceStore = defineStore("occurrence", {
         redirect: "follow",
       };
 
-      const result = await fetch(
-        `http://localhost:5000/occurrences/${id}`,
-        requestOptions
-      )
+      const result = await fetch(url + `/occurrences/${id}`, requestOptions)
         .then((response) => {
           if (response.status === 401) {
             alert("Sessão expirada, faça login novamente");
@@ -121,7 +116,7 @@ export const useOccurrenceStore = defineStore("occurrence", {
     async getOccurrences(
       date: string,
       local: string,
-      occurrence_tipe: string,
+      occurrence_type: string,
       km: string
     ): Promise<boolean> {
       const myHeaders = new Headers();
@@ -136,8 +131,9 @@ export const useOccurrenceStore = defineStore("occurrence", {
       date = !date ? date : getDateForMongo(date);
 
       const result = await fetch(
-        `http://localhost:5000/occurrences/?
-registered_at=${date}&local=${local}&occurrence_tipe=${occurrence_tipe}&km=${km}`,
+        url +
+          `/occurrences/?
+registered_at=${date}&local=${local}&occurrence_type=${occurrence_type}&km=${km}`,
         requestOptions
       )
         .then((response) => {
@@ -159,8 +155,8 @@ registered_at=${date}&local=${local}&occurrence_tipe=${occurrence_tipe}&km=${km}
     async deleteOccurrence(id: number): Promise<boolean> {
       const myHeaders = new Headers();
       myHeaders.append(
-        "x-token",
-        localStorage.getItem("token") || "no token found"
+        "Authorization",
+        "Bearer " + localStorage.getItem("token") || "no token found"
       );
 
       const requestOptions: RequestInit = {
@@ -169,10 +165,7 @@ registered_at=${date}&local=${local}&occurrence_tipe=${occurrence_tipe}&km=${km}
         redirect: "follow",
       };
 
-      const result = await fetch(
-        `http://localhost:5000/occurrences/${id}`,
-        requestOptions
-      )
+      const result = await fetch(url + `/occurrences/${id}`, requestOptions)
         .then((response) => {
           if (response.status === 401) {
             alert("Sessão expirada, faça login novamente");
