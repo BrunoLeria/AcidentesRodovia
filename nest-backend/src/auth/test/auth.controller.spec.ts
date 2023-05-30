@@ -1,54 +1,54 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from '../auth.controller';
 import { AuthService } from '../auth.service';
+import { LocalAuthGuard } from '../guards/local-auth.guard';
+import JwtAuthGuard from '../guards/jwt-auth.guard';
 import { userStub } from '../../users/test/stubs/user.stub';
-import { response } from 'express';
-
-jest.mock('../auth.service');
-jest.mock('express');
+import { Response } from 'express';
 
 describe('AuthController', () => {
   let controller: AuthController;
-  let service: AuthService;
+  let authService: AuthService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [],
       controllers: [AuthController],
       providers: [AuthService],
-    }).compile();
+    })
+      .overrideGuard(LocalAuthGuard)
+      .useValue({ canActivate: () => true })
+      .overrideGuard(JwtAuthGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
 
     controller = module.get<AuthController>(AuthController);
-    service = module.get<AuthService>(AuthService);
-
-    jest.clearAllMocks();
-  });
-
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
+    authService = module.get<AuthService>(AuthService);
   });
 
   describe('login', () => {
-    describe('when login is called', () => {
-      beforeEach(async () => {
-        await controller.login(userStub(), response);
-      });
+    it('should return a token and user object', async () => {
+      const user = userStub();
+      const token = 'testtoken';
+      jest.spyOn(authService, 'login').mockResolvedValue(token);
 
-      test('then it should call authService', () => {
-        expect(service.login).toBeCalledWith(userStub(), response);
-      });
+      const response: Response = {
+        send: jest.fn(),
+      } as any;
+
+      await controller.login(user, response);
+
+      expect(response.send).toHaveBeenCalledWith({ token, ...user });
     });
   });
 
   describe('logout', () => {
-    describe('when logout is called', () => {
-      beforeEach(async () => {
-        await controller.logout(response);
-      });
+    it('should call authService.logout', async () => {
+      const response: Response = {} as any;
+      jest.spyOn(authService, 'logout').mockResolvedValue(undefined);
 
-      test('then it should call authService', () => {
-        expect(service.logout).toBeCalledWith(response);
-      });
+      await controller.logout(response);
+
+      expect(authService.logout).toHaveBeenCalledWith(response);
     });
   });
 });
