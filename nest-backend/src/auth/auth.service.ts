@@ -1,4 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -27,12 +32,21 @@ export class AuthService {
 
     return this.jwtService.sign(tokenPayload);
   }
+  async logout(response: Response, id: number) {
+    if (!id || id < 1) {
+      throw new BadRequestException('Informe um ID válido');
+    }
+    try {
+      response.cookie('Authentication', '', {
+        httpOnly: true,
+      });
 
-  async logout(response: Response) {
-    response.cookie('Authentication', '', {
-      httpOnly: true,
-    });
-    return { message: 'Logout realizado com sucesso' };
+      return { message: 'Logout realizado com sucesso' };
+    } catch (error) {
+      throw new InternalServerErrorException(
+        '	Erro ao tentar encontrar o usuário no servidor',
+      );
+    }
   }
 
   async validateUser(email: string, password: string) {
@@ -41,14 +55,18 @@ export class AuthService {
       await this.validatePassword(password, user.password);
       return user;
     } catch (error) {
-      throw new UnauthorizedException('Credentials are not valid.');
+      throw new UnauthorizedException(
+        'Essas credenciais não correspondem aos nossos registros.',
+      );
     }
   }
 
   async validatePassword(password: string, hashedPassword: string) {
     const passwordIsValid = await bcrypt.compare(password, hashedPassword);
     if (!passwordIsValid) {
-      throw new UnauthorizedException('Credentials are not valid.');
+      throw new UnauthorizedException(
+        'Essas credenciais não correspondem aos nossos registros.',
+      );
     }
   }
 }
