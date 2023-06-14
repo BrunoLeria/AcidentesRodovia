@@ -33,19 +33,25 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       const isOwner = request?.params?.id === userId;
 
       if (!isOccurrence && !isOwner && !isLogout) {
-        throw new UnauthorizedException();
+        throw new UnauthorizedException(
+          'Essas credenciais não correspondem aos nossos registros',
+        );
       }
 
       if (isOccurrence) {
         const body = request.body;
         if (body && body.user_id !== parseInt(userId)) {
-          throw new UnauthorizedException();
+          throw new UnauthorizedException(
+            'Essas credenciais não correspondem aos nossos registros',
+          );
         }
       }
 
       return await this.usersService.getUser({ id: parseInt(userId) });
     } catch (err) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException(
+        'Essas credenciais não correspondem aos nossos registros',
+      );
     }
   }
 }
