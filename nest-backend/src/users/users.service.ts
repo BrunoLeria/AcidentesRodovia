@@ -9,7 +9,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
-  async createUser(createUserRequest: CreateUserDto): Promise<User> {
+  async createUser(createUserRequest: CreateUserDto): Promise<any> {
     const session = await this.usersRepository.startTransaction();
     try {
       const userId = (await this.usersRepository.countDocuments()) + 1;
@@ -22,19 +22,25 @@ export class UsersService {
         { email: newUser.email },
       );
       await session.commitTransaction();
-      return result;
+      return {
+        id: result.id,
+        name: result.name,
+        email: result.email,
+      };
     } catch (err) {
       await session.abortTransaction();
       throw err;
     }
   }
-  async getUsers(): Promise<User[]> {
-    return this.usersRepository.find({});
+  async getUser(getUserArgs: Partial<User>): Promise<any> {
+    const user = await this.usersRepository.findOne(getUserArgs);
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    };
   }
-  async getUser(getUserArgs: Partial<User>): Promise<User> {
-    return this.usersRepository.findOne(getUserArgs);
-  }
-  async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+  async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<any> {
     const session = await this.usersRepository.startTransaction();
     try {
       if (updateUserDto.password) {
@@ -52,7 +58,7 @@ export class UsersService {
     }
   }
 
-  async deleteUser(id: string): Promise<User> {
+  async deleteUser(id: string): Promise<any> {
     const session = await this.usersRepository.startTransaction();
     try {
       const result = await this.usersRepository.findOneAndDelete({
