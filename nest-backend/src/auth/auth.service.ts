@@ -51,7 +51,7 @@ export class AuthService {
 
   async validateUser(email: string, password: string) {
     try {
-      const user = await this.usersService.getUser({ email: email });
+      const user = await this.usersService.getAllUserInfo({ email: email });
       await this.validatePassword(password, user.password);
       return user;
     } catch (error) {

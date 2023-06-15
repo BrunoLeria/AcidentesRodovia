@@ -40,6 +40,9 @@ export class UsersService {
       email: user.email,
     };
   }
+  async getAllUserInfo(getUserArgs: Partial<User>): Promise<any> {
+    return await this.usersRepository.findOne(getUserArgs);
+  }
   async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<any> {
     const session = await this.usersRepository.startTransaction();
     try {
