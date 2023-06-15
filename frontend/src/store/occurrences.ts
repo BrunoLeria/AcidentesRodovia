@@ -16,6 +16,7 @@ export const useOccurrenceStore = defineStore("occurrence", {
   getters: {},
   actions: {
     async addOccurrence(
+      registered_at: string,
       local: string,
       occurrence_type: number,
       km: number
@@ -28,7 +29,7 @@ export const useOccurrenceStore = defineStore("occurrence", {
       myHeaders.append("Content-Type", "application/json");
 
       const raw = JSON.stringify({
-        registered_at: getToday(),
+        registered_at: registered_at,
         local: local,
         occurrence_type: occurrence_type,
         km: km,
@@ -66,6 +67,7 @@ export const useOccurrenceStore = defineStore("occurrence", {
     },
     async updateOccurrence(
       id: number,
+      registered_at: string,
       local: string,
       occurrence_type: number,
       km: number
@@ -78,9 +80,11 @@ export const useOccurrenceStore = defineStore("occurrence", {
       myHeaders.append("Content-Type", "application/json");
 
       const raw = JSON.stringify({
+        registered_at: registered_at,
         local: local,
         occurrence_type: occurrence_type,
         km: km,
+        user_id: userStore.user.id,
       });
 
       const requestOptions: RequestInit = {
