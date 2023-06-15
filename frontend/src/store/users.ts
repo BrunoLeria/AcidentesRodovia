@@ -12,9 +12,6 @@ export const useUserStore = defineStore("user", {
   getters: {},
   actions: {
     async login(email: string, password: string): Promise<boolean> {
-      localStorage.setItem("token", "");
-      this.$state.user = {} as IUser;
-
       const raw = JSON.stringify({
         email: email,
         password: Md5.hashStr(password),
