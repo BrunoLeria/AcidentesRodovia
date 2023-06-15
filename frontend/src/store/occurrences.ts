@@ -176,7 +176,9 @@ export const useOccurrenceStore = defineStore("occurrence", {
         })
         .then((result) => {
           if (!result) return false;
-          alert(result.message);
+          if (result.hasOwnProperty("message")) {
+            alert(result.message);
+          }
           return (
             result.hasOwnProperty("message") &&
             result.message === "Ocorrência excluida com sucesso"
