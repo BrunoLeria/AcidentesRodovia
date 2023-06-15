@@ -76,4 +76,11 @@ export class OccurrencesService {
   async getOccurrence(getOccurrenceArgs: Partial<Occurrence>): Promise<any> {
     return this.occurrencesRepository.findOne(getOccurrenceArgs);
   }
+  async checkOccurrenceOwner(id: string, user_id: string): Promise<boolean> {
+    const occurrence = await this.occurrencesRepository.findOne({
+      id: parseInt(id),
+    });
+
+    return occurrence ? occurrence.user_id === parseInt(user_id) : true;
+  }
 }
