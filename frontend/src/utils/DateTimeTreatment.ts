@@ -46,21 +46,16 @@ export function getDateFull(date?: Date) {
 
 export function getToday(date?: Date) {
   const DATE = new Date(date || Date.now());
-  const DAY = DATE.getDate() < 0 ? `0${DATE.getDate()}` : `${DATE.getDate()}`;
-  const MONTH =
-    DATE.getMonth() + 1 < 10
-      ? `0${DATE.getMonth() + 1}`
-      : `${DATE.getMonth() + 1}`;
+  const DAY = DATE.getDate().toString().padStart(2, "0");
+  const MONTH = (DATE.getMonth() + 1).toString().padStart(2, "0");
   const CURRENT_DATE = `${DATE.getFullYear()}-${MONTH}-${DAY}`;
   return CURRENT_DATE;
 }
 
 export function getTime() {
   const DATE = new Date(Date.now());
-  const HOUR =
-    DATE.getHours() < 10 ? `0${DATE.getHours()}` : `${DATE.getHours()}`;
-  const MINUTES =
-    DATE.getMinutes() < 10 ? `0${DATE.getMinutes()}` : `${DATE.getMinutes()}`;
+  const HOUR = DATE.getHours().toString().padStart(2, "0");
+  const MINUTES = DATE.getMinutes().toString().padStart(2, "0");
   const CURRENT_TIME = `${HOUR}:${MINUTES}`;
   return CURRENT_TIME;
 }
