@@ -4,7 +4,7 @@ import { useOccurrenceStore } from "../../../../store/occurrences";
 import { localRules, kmRules, requiredRules } from "../../../../utils/FormRules";
 import { IOccurrence } from "../../../../interfaces/occurrence.interface";
 import { occurrenceType } from "../../../../utils/TypeOfOccurrences";
-import { getToday, getTime } from "@/utils/DateTimeTreatment";
+import { getDate, getTime } from "@/utils/DateTimeTreatment";
 
 const emit = defineEmits(['loading', 'dialog'])
 
@@ -20,13 +20,15 @@ const form = ref(false);
 const local = ref("");
 const occurrence_type = ref("");
 const km = ref("");
-const date = ref(getToday());
+const date = ref(getDate());
 const time = ref("12:30");
 
 if (props.occurrence) {
   local.value = props.occurrence.local;
   occurrence_type.value = occurrenceType[props.occurrence.occurrence_type + 1];
   km.value = props.occurrence.km.toString();
+  date.value = getDate(props.occurrence.registered_at);
+  time.value = getTime(props.occurrence.registered_at);
 }
 
 async function onSubmit() {
@@ -83,11 +85,11 @@ async function onSubmit() {
         </v-row>
         <v-row>
           <v-col cols="6">
-            <v-text-field v-model="date" label="Data do acidente:" type="date" :max="getToday()" step="1"
+            <v-text-field v-model="date" label="Data do acidente:" type="date" :max="getDate()" step="1"
               required></v-text-field>
           </v-col>
           <v-col cols="6">
-            <v-text-field v-model="time" label="Hora do acidente:" type="time" :max="date === getToday() ? getTime() : ''"
+            <v-text-field v-model="time" label="Hora do acidente:" type="time" :max="date === getDate() ? getTime() : ''"
               suffix="BRT" required></v-text-field>
           </v-col>
         </v-row>

@@ -1,8 +1,6 @@
 import { defineStore } from "pinia";
 import { IOccurrence } from "@/interfaces/occurrence.interface";
 import { useUserStore } from "./users";
-import { getToday } from "@/utils/DateTimeTreatment";
-import { getDateForMongo } from "../utils/DateTimeTreatment";
 import { url } from "@/utils/HttpRequestInfo";
 
 const userStore = useUserStore();
@@ -118,7 +116,6 @@ export const useOccurrenceStore = defineStore("occurrence", {
       return result;
     },
     async getOccurrences(
-      date: string,
       local: string,
       occurrence_type: number,
       km: string
@@ -132,12 +129,9 @@ export const useOccurrenceStore = defineStore("occurrence", {
         redirect: "follow",
       };
 
-      date = !date ? date : getDateForMongo(date);
-
       const result = await fetch(
         url +
-          `/occurrences/?
-registered_at=${date}&local=${local}&occurrence_type=${occurrence_type}&km=${km}`,
+          `/occurrences/?local=${local}&occurrence_type=${occurrence_type}&km=${km}`,
         requestOptions
       )
         .then((response) => {
