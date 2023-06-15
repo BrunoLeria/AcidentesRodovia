@@ -17,7 +17,7 @@ export const useOccurrenceStore = defineStore("occurrence", {
   actions: {
     async addOccurrence(
       local: string,
-      occurrence_type: string,
+      occurrence_type: number,
       km: number
     ): Promise<boolean> {
       const myHeaders = new Headers();
@@ -67,7 +67,7 @@ export const useOccurrenceStore = defineStore("occurrence", {
     async updateOccurrence(
       id: number,
       local: string,
-      occurrence_type: string,
+      occurrence_type: number,
       km: number
     ): Promise<boolean> {
       const myHeaders = new Headers();
@@ -116,7 +116,7 @@ export const useOccurrenceStore = defineStore("occurrence", {
     async getOccurrences(
       date: string,
       local: string,
-      occurrence_type: string,
+      occurrence_type: number,
       km: string
     ): Promise<boolean> {
       const myHeaders = new Headers();
