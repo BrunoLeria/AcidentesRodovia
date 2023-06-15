@@ -4,7 +4,6 @@ import { User } from './schemas/user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { parse } from 'path';
 
 @Injectable()
 export class UsersService {
