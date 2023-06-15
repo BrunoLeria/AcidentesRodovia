@@ -134,7 +134,7 @@ export const useUserStore = defineStore("user", {
       const raw = JSON.stringify({
         email: email === "" ? this.user.email : email,
         name: name === "" ? this.user.name : name,
-        password: password,
+        password: password === "" ? null : password,
       });
 
       const requestOptions: RequestInit = {
