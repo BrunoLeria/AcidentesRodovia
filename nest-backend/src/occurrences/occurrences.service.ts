@@ -47,7 +47,14 @@ export class OccurrencesService {
         updateOccurrenceDto,
       );
       await session.commitTransaction();
-      return result;
+      return {
+        id: result.id,
+        registered_at: result.registered_at,
+        local: result.local,
+        occurrence_type: result.occurrence_type,
+        km: result.km,
+        user_id: result.user_id,
+      };
     } catch (err) {
       await session.abortTransaction();
       throw err;
