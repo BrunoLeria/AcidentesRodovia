@@ -60,6 +60,17 @@ export function getTime() {
   return CURRENT_TIME;
 }
 
+export function isoToBrazilianDate(isoDate: string): string {
+  const date = new Date(isoDate);
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear().toString();
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  const seconds = date.getSeconds().toString().padStart(2, "0");
+  return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+}
+
 export function getDateForMongo(date: string) {
   const DATE = date.match(/\d+/g);
   const FINAL_DATE = DATE ? `${DATE[2]}/${parseInt(DATE[1])}/${DATE[0]}` : "";
