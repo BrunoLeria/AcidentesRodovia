@@ -18,15 +18,6 @@ Faça o download do MongoDB Community Server por este link: https://www.mongodb.
 
 E do MongoDB Compass para visualizar os documentos (Opcional), em: https://www.mongodb.com/products/compass
 
-## Para iniciar o frontend
-
-```bash
-# npm
-$ cd frontend
-$ npm i
-$ npm run dev
-```
-
 ### Para iniciar o nest-backend
 
 ```bash
@@ -34,6 +25,15 @@ $ npm run dev
 $ cd nest-backend
 $ npm i
 $ npm run start
+```
+
+## Para iniciar o frontend
+
+```bash
+# npm
+$ cd frontend
+$ npm i
+$ npm run dev
 ```
 
 ### Compiles and minifies for production (Frontend)
