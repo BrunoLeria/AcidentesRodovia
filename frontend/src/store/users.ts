@@ -144,17 +144,12 @@ export const useUserStore = defineStore("user", {
         redirect: "follow",
       };
 
-      const result = await fetch(url + `/users/${this.user.id}`, requestOptions)
-        .then((response) => {
-          return response.json();
-        })
-        .then((result) => {
-          alert(result.message);
-          return (
-            result.hasOwnProperty("message") &&
-            result.message === "Atualização do usuário realizada com sucesso"
-          );
-        });
+      const result = await fetch(
+        url + `/users/${this.user.id}`,
+        requestOptions
+      ).then((response) => {
+        return response.json();
+      });
 
       if (result)
         this.user = {
