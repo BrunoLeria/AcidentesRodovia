@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateOccurrenceDto } from './dto/create-occurrences.dto';
-import { UpdateOccurrencesDto } from './dto/update-occurrences.dto';
+import { OccurrenceDto } from './dto/occurrences.dto';
 import { Occurrence } from './schemas/occurrence.schema';
 import { OccurrencesRepository } from './occurrences.repository';
 
@@ -9,7 +8,7 @@ export class OccurrencesService {
   constructor(private readonly occurrencesRepository: OccurrencesRepository) {}
 
   async createOccurrence(
-    createOccurrenceDto: CreateOccurrenceDto,
+    createOccurrenceDto: OccurrenceDto,
   ): Promise<Occurrence> {
     const session = await this.occurrencesRepository.startTransaction();
     try {
@@ -33,7 +32,7 @@ export class OccurrencesService {
   }
   async updateOccurrence(
     id: string,
-    updateOccurrenceDto: UpdateOccurrencesDto,
+    updateOccurrenceDto: OccurrenceDto,
   ): Promise<Occurrence> {
     const session = await this.occurrencesRepository.startTransaction();
     try {

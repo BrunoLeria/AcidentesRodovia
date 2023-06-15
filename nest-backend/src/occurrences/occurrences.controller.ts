@@ -10,9 +10,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { OccurrencesService } from './occurrences.service';
-import { CreateOccurrenceDto } from './dto/create-occurrences.dto';
+import { OccurrenceDto } from './dto/occurrences.dto';
 import { Occurrence } from './schemas/occurrence.schema';
-import { UpdateOccurrencesDto } from './dto/update-occurrences.dto';
 import JwtAuthGuard from 'src/auth/guards/jwt-auth.guard';
 import { OccurrencesExceptionFilter } from './exceptions/occurrences.excepetion.filter';
 
@@ -24,7 +23,7 @@ export class OccurrencesController {
   @UseGuards(JwtAuthGuard)
   @UseFilters(OccurrencesExceptionFilter)
   async createOccurrence(
-    @Body() createOccurrenceDto: CreateOccurrenceDto,
+    @Body() createOccurrenceDto: OccurrenceDto,
   ): Promise<Occurrence> {
     return await this.occurrencesService.createOccurrence(createOccurrenceDto);
   }
@@ -39,7 +38,7 @@ export class OccurrencesController {
   @UseFilters(OccurrencesExceptionFilter)
   async updateOccurrence(
     @Param('id') id: string,
-    @Body() updateOccurrenceDto: UpdateOccurrencesDto,
+    @Body() updateOccurrenceDto: OccurrenceDto,
   ): Promise<Occurrence> {
     return await this.occurrencesService.updateOccurrence(
       id,
