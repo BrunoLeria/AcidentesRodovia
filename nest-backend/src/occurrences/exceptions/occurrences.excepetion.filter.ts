@@ -25,6 +25,13 @@ export class OccurrencesExceptionFilter implements ExceptionFilter {
         message: 'Essas credenciais não correspondem aos nossos registros',
       });
     }
+
+    if (status === 404) {
+      return response.status(400).json({
+        message: 'Campos inválidos',
+      });
+    }
+
     return response.status(status).json({
       message: message,
     });
