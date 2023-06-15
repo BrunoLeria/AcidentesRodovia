@@ -5,6 +5,8 @@ import ConfirmDialog from "./ConfirmDialog.vue";
 import { useOccurrenceStore } from "@/store/occurrences";
 import { useUserStore } from "@/store/users";
 import { ref } from 'vue';
+import { isoToBrazilianDate } from "@/utils/DateTimeTreatment";
+import { occurrenceType } from '../../../utils/TypeOfOccurrences';
 
 const props = defineProps({
     occurrence: {
@@ -49,11 +51,11 @@ const deleteOccurrence = async () => {
         <v-divider />
 
         <v-card-text class="text-h8 py-2">
-            Registrado em: {{ props.occurrence.registered_at }}
+            Registrado em: {{ isoToBrazilianDate(props.occurrence.registered_at) }}
             <br />
             Pelo usuário: {{ props.occurrence.user_id }}
             <br />
-            Tipo de ocorrência: {{ props.occurrence.occurrence_type }}
+            Tipo de ocorrência: {{ occurrenceType[props.occurrence.occurrence_type - 1] }}
         </v-card-text>
     </v-card>
 </template>
