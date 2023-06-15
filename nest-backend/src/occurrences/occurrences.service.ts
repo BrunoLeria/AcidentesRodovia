@@ -43,7 +43,7 @@ export class OccurrencesService {
     const session = await this.occurrencesRepository.startTransaction();
     try {
       const result = await this.occurrencesRepository.findOneAndUpdate(
-        { occurrenceId: parseInt(id) },
+        { id: parseInt(id) },
         updateOccurrenceDto,
       );
       await session.commitTransaction();
@@ -57,7 +57,7 @@ export class OccurrencesService {
     const session = await this.occurrencesRepository.startTransaction();
     try {
       const result = await this.occurrencesRepository.findOneAndDelete({
-        occurrenceId: id,
+        id: id,
       });
       await session.commitTransaction();
       return result;
