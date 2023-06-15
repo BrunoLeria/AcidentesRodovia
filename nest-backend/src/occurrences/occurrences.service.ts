@@ -63,11 +63,13 @@ export class OccurrencesService {
   async deleteOccurrence(id: string): Promise<any> {
     const session = await this.occurrencesRepository.startTransaction();
     try {
-      const result = await this.occurrencesRepository.findOneAndDelete({
+      await this.occurrencesRepository.findOneAndDelete({
         id: id,
       });
       await session.commitTransaction();
-      return result;
+      return {
+        message: 'Ocorrência excluida com sucesso',
+      };
     } catch (err) {
       await session.abortTransaction();
       throw err;
