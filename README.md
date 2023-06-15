@@ -10,19 +10,7 @@ Paraná.
 
 ## Project setup
 
-Projeto é separado em duas pastas diferentes: backend com o servidor e frontend com a aplicaçao
-
-```
-# yarn
-yarn
-
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-```
+Projeto é separado em duas pastas diferentes: nest-backend com o servidor e frontend com a aplicaçao
 
 Necessita também a instalação do Mongo DB local:
 
@@ -32,23 +20,20 @@ E do MongoDB Compass para visualizar os documentos (Opcional), em: https://www.m
 
 ## Para iniciar o frontend
 
-```
-# yarn
-yarn dev
-
+```bash
 # npm
-npm run dev
-
-# pnpm
-pnpm dev
+$ cd frontend
+$ npm i
+$ npm run dev
 ```
 
-### Para iniciar o backend
+### Para iniciar o nest-backend
 
-```
-# npm starts nodemon
-npm run start
-
+```bash
+# development
+$ cd nest-backend
+$ npm i
+$ npm run start
 ```
 
 ### Compiles and minifies for production (Frontend)
