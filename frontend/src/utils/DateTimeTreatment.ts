@@ -1,3 +1,5 @@
+import { REFUSED } from "dns";
+
 export function timeToSeconds(tempo: string) {
   const [HOURS = 0, MINUTES = 0, SECONDS = 0] = tempo.split(":").map(Number);
   const TIME_IN_SECONDS = HOURS * 3600 + MINUTES * 60 + SECONDS;
@@ -51,6 +53,16 @@ export function getToday(date?: Date) {
       : `${DATE.getMonth() + 1}`;
   const CURRENT_DATE = `${DATE.getFullYear()}-${MONTH}-${DAY}`;
   return CURRENT_DATE;
+}
+
+export function getTime() {
+  const DATE = new Date(Date.now());
+  const HOUR =
+    DATE.getHours() < 10 ? `0${DATE.getHours()}` : `${DATE.getHours()}`;
+  const MINUTES =
+    DATE.getMinutes() < 10 ? `0${DATE.getMinutes()}` : `${DATE.getMinutes()}`;
+  const CURRENT_TIME = `${HOUR}:${MINUTES}`;
+  return CURRENT_TIME;
 }
 
 export function getDateForMongo(date: string) {

@@ -4,7 +4,7 @@ import { useOccurrenceStore } from "../../../../store/occurrences";
 import { localRules, kmRules, requiredRules } from "../../../../utils/FormRules";
 import { IOccurrence } from "../../../../interfaces/occurrence.interface";
 import { occurrenceType } from "../../../../utils/TypeOfOccurrences";
-import { getToday } from "@/utils/DateTimeTreatment";
+import { getToday, getTime } from "@/utils/DateTimeTreatment";
 
 const emit = defineEmits(['loading', 'dialog'])
 
@@ -87,7 +87,8 @@ async function onSubmit() {
               required></v-text-field>
           </v-col>
           <v-col cols="6">
-            <v-text-field v-model="time" label="Hora do acidente:" type="time" suffix="BRT" required></v-text-field>
+            <v-text-field v-model="time" label="Hora do acidente:" type="time" :max="date === getToday() ? getTime() : ''"
+              suffix="BRT" required></v-text-field>
           </v-col>
         </v-row>
       </v-container>
