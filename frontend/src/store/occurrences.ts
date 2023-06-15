@@ -104,11 +104,12 @@ export const useOccurrenceStore = defineStore("occurrence", {
         })
         .then((result) => {
           if (!result) return false;
-          alert(result.message);
-          return (
-            result.hasOwnProperty("message") &&
-            result.message === "Atualização da ocorrência realizada com sucesso"
-          );
+          if (result.hasOwnProperty("message")) {
+            alert(result.message);
+            return false;
+          }
+          alert("Atualização da ocorrência realizada com sucesso");
+          return true;
         });
       if (result) {
         location.reload();
