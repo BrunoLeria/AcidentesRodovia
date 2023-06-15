@@ -7,9 +7,7 @@ import { OccurrencesRepository } from './occurrences.repository';
 export class OccurrencesService {
   constructor(private readonly occurrencesRepository: OccurrencesRepository) {}
 
-  async createOccurrence(
-    createOccurrenceDto: OccurrenceDto,
-  ): Promise<Occurrence> {
+  async createOccurrence(createOccurrenceDto: OccurrenceDto): Promise<any> {
     const session = await this.occurrencesRepository.startTransaction();
     try {
       const occurrenceId =
@@ -21,7 +19,14 @@ export class OccurrencesService {
       };
       const result = await this.occurrencesRepository.create(newOccurrence);
       await session.commitTransaction();
-      return result;
+      return {
+        id: result.id,
+        registered_at: result.registered_at,
+        local: result.local,
+        occurrence_type: result.occurrence_type,
+        km: result.km,
+        user_id: result.user_id,
+      };
     } catch (err) {
       await session.abortTransaction();
       throw err;
@@ -33,7 +38,7 @@ export class OccurrencesService {
   async updateOccurrence(
     id: string,
     updateOccurrenceDto: OccurrenceDto,
-  ): Promise<Occurrence> {
+  ): Promise<any> {
     const session = await this.occurrencesRepository.startTransaction();
     try {
       const result = await this.occurrencesRepository.findOneAndUpdate(
@@ -47,7 +52,7 @@ export class OccurrencesService {
       throw err;
     }
   }
-  async deleteOccurrence(id: string): Promise<Occurrence> {
+  async deleteOccurrence(id: string): Promise<any> {
     const session = await this.occurrencesRepository.startTransaction();
     try {
       const result = await this.occurrencesRepository.findOneAndDelete({
@@ -60,9 +65,7 @@ export class OccurrencesService {
       throw err;
     }
   }
-  async getOccurrence(
-    getOccurrenceArgs: Partial<Occurrence>,
-  ): Promise<Occurrence> {
+  async getOccurrence(getOccurrenceArgs: Partial<Occurrence>): Promise<any> {
     return this.occurrencesRepository.findOne(getOccurrenceArgs);
   }
 }
