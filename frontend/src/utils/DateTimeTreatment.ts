@@ -44,9 +44,12 @@ export function getDateFull(date?: Date) {
 
 export function getToday(date?: Date) {
   const DATE = new Date(date || Date.now());
-  const CURRENT_DATE = `${DATE.getDate()}/${
-    DATE.getMonth() + 1
-  }/${DATE.getFullYear()}`;
+  const DAY = DATE.getDate() < 0 ? `0${DATE.getDate()}` : `${DATE.getDate()}`;
+  const MONTH =
+    DATE.getMonth() + 1 < 10
+      ? `0${DATE.getMonth() + 1}`
+      : `${DATE.getMonth() + 1}`;
+  const CURRENT_DATE = `${DATE.getFullYear()}-${MONTH}-${DAY}`;
   return CURRENT_DATE;
 }
 
