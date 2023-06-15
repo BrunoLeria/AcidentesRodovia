@@ -1,6 +1,4 @@
-import { ref } from "vue";
-
-export const occurrenceType = ref([
+export const occurrenceType = [
   "Atropelamento",
   "Deslizamento",
   "Colisão frontal",
@@ -11,4 +9,4 @@ export const occurrenceType = ref([
   "Colisão com motocicletas",
   "Colisão no mesmo sentido ou transversal ",
   "Construção",
-]);
+];
