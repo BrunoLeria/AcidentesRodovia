@@ -10,8 +10,9 @@ export class OccurrencesService {
   async createOccurrence(createOccurrenceDto: OccurrenceDto): Promise<any> {
     const session = await this.occurrencesRepository.startTransaction();
     try {
-      const occurrenceId =
-        (await this.occurrencesRepository.countDocuments()) + 1;
+      const lastOccurrence =
+        await this.occurrencesRepository.findLastDocument();
+      const occurrenceId = lastOccurrence ? lastOccurrence.id + 1 : 1;
 
       const newOccurrence = {
         id: occurrenceId,
