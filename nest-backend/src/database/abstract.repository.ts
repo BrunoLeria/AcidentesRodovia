@@ -81,6 +81,10 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
     return this.model.find(filterQuery, { _id: 0, __v: 0 }, { lean: true });
   }
 
+  async findLastDocument() {
+    return this.model.findOne({}, {}, { lean: true }).sort({ $natural: -1 });
+  }
+
   async findOneAndDelete(filterQuery: FilterQuery<TDocument>) {
     const document = await this.model.findOneAndDelete(filterQuery);
 

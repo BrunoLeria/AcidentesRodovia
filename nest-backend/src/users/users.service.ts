@@ -12,7 +12,8 @@ export class UsersService {
   async createUser(createUserRequest: CreateUserDto): Promise<any> {
     const session = await this.usersRepository.startTransaction();
     try {
-      const userId = (await this.usersRepository.countDocuments()) + 1;
+      const lastUser = await this.usersRepository.findLastDocument();
+      const userId = lastUser ? lastUser.id + 1 : 1;
 
       const newUser = { id: userId, ...createUserRequest };
       newUser.password = await bcrypt.hash(newUser.password, 10);
