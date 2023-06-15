@@ -13,9 +13,26 @@ const hasToken = localStorage.getItem("token") !== "";
 
 
 const getOccurrences = async () => {
-	//
+	const myHeaders = new Headers();
 
-	return [];
+	const requestOptions: RequestInit = {
+		method: "GET",
+		headers: myHeaders,
+		redirect: "follow",
+	};
+
+	await fetch(
+		url + "/occurrences",
+		requestOptions
+	)
+		.then((response) => {
+			return response.json();
+		})
+		.then((result) => {
+			if (!result.hasOwnProperty("message")) {
+				occurrencesStore.occurrences = result;
+			}
+		});
 };
 
 onMounted(() => {
