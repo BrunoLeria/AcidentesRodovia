@@ -22,7 +22,7 @@ const km = ref("");
 
 if (props.occurrence) {
   local.value = props.occurrence.local;
-  occurrence_type.value = props.occurrence.occurrence_type;
+  occurrence_type.value = occurrenceType[props.occurrence.occurrence_type + 1];
   km.value = props.occurrence.km.toString();
 }
 
@@ -32,15 +32,15 @@ async function onSubmit() {
     if (!props.occurrence)
       await occurrencesStore.addOccurrence(
         local.value,
-        occurrence_type.value,
+        occurrenceType.indexOf(occurrence_type.value) + 1,
         parseInt(km.value),
       );
     else {
-      if (props.occurrence.local != local.value || props.occurrence.occurrence_type != occurrence_type.value || props.occurrence.km != parseInt(km.value))
+      if (props.occurrence.local !== local.value || occurrenceType[props.occurrence.occurrence_type + 1] !== occurrence_type.value || props.occurrence.km !== parseInt(km.value))
         await occurrencesStore.updateOccurrence(
           props.occurrence.id,
           local.value,
-          occurrence_type.value,
+          occurrenceType.indexOf(occurrence_type.value) + 1,
           parseInt(km.value),
         );
       else {
