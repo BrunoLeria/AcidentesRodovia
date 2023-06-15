@@ -11,6 +11,5 @@ export class UpdateUserDto {
   @IsEmail()
   email: string;
 
-  @MaxLength(150)
   password: string;
 }

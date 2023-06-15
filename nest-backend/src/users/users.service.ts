@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
 import { User } from './schemas/user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -47,15 +47,28 @@ export class UsersService {
   async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<any> {
     const session = await this.usersRepository.startTransaction();
     try {
+      const user = await this.usersRepository.findOne({
+        email: updateUserDto.email,
+      });
+      if (user.id !== parseInt(id)) {
+        throw new UnprocessableEntityException();
+      }
+
       if (updateUserDto.password) {
         updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
+      } else {
+        delete updateUserDto.password;
       }
       const result = await this.usersRepository.findOneAndUpdate(
         { id: parseInt(id) },
         updateUserDto,
       );
       await session.commitTransaction();
-      return result;
+      return {
+        id: result.id,
+        name: result.name,
+        email: result.email,
+      };
     } catch (err) {
       await session.abortTransaction();
       throw err;
