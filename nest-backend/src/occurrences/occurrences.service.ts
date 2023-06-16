@@ -76,7 +76,7 @@ export class OccurrencesService {
     }
   }
   async getOccurrence(getOccurrenceArgs: Partial<Occurrence>): Promise<any> {
-    return this.occurrencesRepository.findOne(getOccurrenceArgs);
+    return this.occurrencesRepository.find(getOccurrenceArgs);
   }
   async checkOccurrenceOwner(id: string, user_id: string): Promise<boolean> {
     const occurrence = await this.occurrencesRepository.findOne({
