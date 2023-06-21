@@ -39,12 +39,13 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
     return await createdDocument.save(options);
   }
 
-  async findOne(filterQuery: FilterQuery<TDocument>): Promise<TDocument> {
-    const document = await this.model.findOne(
-      filterQuery,
-      { __v: 0 },
-      { lean: true },
-    );
+  async findOne(
+    filterQuery: FilterQuery<TDocument>,
+    returnFields: string,
+  ): Promise<TDocument> {
+    const document = await this.model.findOne(filterQuery, returnFields, {
+      lean: true,
+    });
 
     return document;
   }
@@ -77,8 +78,8 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
     });
   }
 
-  async find(filterQuery: FilterQuery<TDocument>) {
-    return this.model.find(filterQuery, { _id: 0, __v: 0 }, { lean: true });
+  async find(filterQuery: FilterQuery<TDocument>, returnFields: string) {
+    return this.model.find(filterQuery, returnFields, { lean: true });
   }
 
   async findLastDocument() {

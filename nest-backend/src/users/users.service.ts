@@ -34,22 +34,23 @@ export class UsersService {
     }
   }
   async getUser(getUserArgs: Partial<User>): Promise<any> {
-    const user = await this.usersRepository.findOne(getUserArgs);
-    return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-    };
+    return await this.usersRepository.findOne(
+      getUserArgs,
+      '-_id -__v id name email',
+    );
   }
   async getAllUserInfo(getUserArgs: Partial<User>): Promise<any> {
-    return await this.usersRepository.findOne(getUserArgs);
+    return await this.usersRepository.findOne(getUserArgs, '-_id -__v');
   }
   async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<any> {
     const session = await this.usersRepository.startTransaction();
     try {
-      const user = await this.usersRepository.findOne({
-        email: updateUserDto.email,
-      });
+      const user = await this.usersRepository.findOne(
+        {
+          email: updateUserDto.email,
+        },
+        '-_id -__v id',
+      );
       if (user.id !== parseInt(id)) {
         throw new UnprocessableEntityException();
       }

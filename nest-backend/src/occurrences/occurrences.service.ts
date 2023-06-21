@@ -34,7 +34,10 @@ export class OccurrencesService {
     }
   }
   async getOccurrences(): Promise<Occurrence[]> {
-    return this.occurrencesRepository.find({});
+    return this.occurrencesRepository.find(
+      {},
+      'id registered_at local occurrence_type km user_id -_id',
+    );
   }
   async updateOccurrence(
     id: string,
@@ -76,12 +79,18 @@ export class OccurrencesService {
     }
   }
   async getOccurrence(getOccurrenceArgs: Partial<Occurrence>): Promise<any> {
-    return this.occurrencesRepository.find(getOccurrenceArgs);
+    return this.occurrencesRepository.find(
+      getOccurrenceArgs,
+      'id registered_at local occurrence_type km user_id',
+    );
   }
   async checkOccurrenceOwner(id: string, user_id: string): Promise<boolean> {
-    const occurrence = await this.occurrencesRepository.findOne({
-      id: parseInt(id),
-    });
+    const occurrence = await this.occurrencesRepository.findOne(
+      {
+        id: parseInt(id),
+      },
+      'user_id',
+    );
 
     return occurrence ? occurrence.user_id === parseInt(user_id) : true;
   }
