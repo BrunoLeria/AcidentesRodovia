@@ -59,4 +59,22 @@ export class OccurrencesController {
       user_id: parseInt(id),
     });
   }
+
+  @Get('filter/:registered_at/:local/:occurrence_type/:km')
+  async getOccurrencesByFilter(@Param() params: any): Promise<any> {
+    const args = {};
+    if (params.registered_at !== 'null') {
+      args['registered_at'] = params.registered_at;
+    }
+    if (params.local !== 'null') {
+      args['local'] = params.local;
+    }
+    if (params.occurrence_type !== 'null') {
+      args['occurrence_type'] = params.occurrence_type;
+    }
+    if (params.km !== 'null') {
+      args['km'] = params.km;
+    }
+    return await this.occurrencesService.getOccurrence(args);
+  }
 }
