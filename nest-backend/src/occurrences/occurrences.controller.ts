@@ -54,6 +54,8 @@ export class OccurrencesController {
   }
 
   @Get('users/:id')
+  @UseGuards(JwtAuthGuard)
+  @UseFilters(OccurrencesExceptionFilter)
   async getOccurrencesByUser(@Param('id') id: string): Promise<Occurrence> {
     return await this.occurrencesService.getOccurrence({
       user_id: parseInt(id),
