@@ -9,13 +9,13 @@ const props = defineProps({
 });
 
 const occurrencesStore = useOccurrenceStore();
-const date = ref(getDate());
+const date = ref("");
 const local = ref("");
 const occurrence_type = ref("");
 const km = ref("");
 const isRichardsSubject = ref(false);
-const userid = ref("");
-const time = ref("12:30");
+const userId = ref("");
+const time = ref("");
 
 watch(date, async () => {
   if (date.value === null) {
@@ -40,17 +40,25 @@ watch(km, async () => {
     km.value = "";
   }
 });
+
+watch(userId, async () => {
+  if (userId.value === null) {
+    userId.value = "";
+  }
+});
 async function getOccurrences() {
-  if (isRichardsSubject.value) {
-    await occurrencesStore.getOccurrencesByUser(parseInt(userid.value));
+  if (isRichardsSubject.value && userId.value !== "") {
+    await occurrencesStore.getOccurrencesByUser(parseInt(userId.value));
     return;
   }
+  const registered_at = date.value.length === 0 ? time.value : date.value + "T" + time.value;
   await occurrencesStore.getOccurrences(
-    date.value,
+    registered_at,
     local.value,
     occurrenceType.indexOf(occurrence_type.value) + 1,
-    parseInt(km.value),
-    parseInt(userid.value)
+    parseInt(km.value === "" ? "0" : km.value),
+    parseInt(userId.value === "" ? "0" : userId.value),
+    isRichardsSubject.value
   );
 }
 
@@ -59,6 +67,7 @@ async function reset() {
   local.value = "";
   occurrence_type.value = "";
   km.value = "";
+  userId.value = "";
   await getOccurrences();
 }
 </script>
@@ -72,7 +81,7 @@ async function reset() {
     </v-row>
     <v-divider></v-divider>
     <v-label v-if="!props.rail" class="mx-5 mt-5">ID do usuário:</v-label>
-    <v-text-field v-if="!props.rail" clearable v-model="userid" variant="outlined" class="mx-5 mb-5" />
+    <v-text-field v-if="!props.rail" clearable v-model="userId" variant="outlined" class="mx-5 mb-5" />
     <v-label v-if="!props.rail && !isRichardsSubject" class="mx-5">Data do acidente:</v-label>
     <v-text-field v-if="!props.rail && !isRichardsSubject" clearable v-model="date" type="date" :max="getDate()" step="1"
       variant="outlined" class="mx-5 mb-5"></v-text-field>

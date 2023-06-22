@@ -117,11 +117,12 @@ export const useOccurrenceStore = defineStore("occurrence", {
       return result;
     },
     async getOccurrences(
-      date: string,
+      registered_at: string,
       local: string,
-      occurrence_type: number,
-      km: number,
-      user_id: number
+      occurrence_type: number | null,
+      km: number | null,
+      user_id: number | null,
+      isRichardsSubject: boolean | null
     ): Promise<boolean> {
       const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
@@ -132,11 +133,21 @@ export const useOccurrenceStore = defineStore("occurrence", {
         redirect: "follow",
       };
 
-      const result = await fetch(
-        url +
-          `/occurrences/?local=${local}&occurrence_type=${occurrence_type}&km=${km}`,
-        requestOptions
-      )
+      // Convert empty strings to null
+      registered_at = registered_at.length === 0 ? "null" : registered_at;
+      local = local.length === 0 ? "null" : local;
+
+      // Convert 0 to null for numeric values
+      occurrence_type = occurrence_type === 0 ? null : occurrence_type;
+      km = km === 0 ? null : km;
+      user_id = user_id === 0 ? null : user_id;
+
+      // Build link URL
+      const link = isRichardsSubject
+        ? ""
+        : `/filter/${registered_at}/${local}/${occurrence_type}/${km}/${user_id}`;
+
+      const result = await fetch(url + `/occurrences${link}`, requestOptions)
         .then((response) => {
           if (response.status === 404) {
             alert("Nenhuma ocorrência encontrada");
