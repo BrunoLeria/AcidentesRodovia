@@ -41,6 +41,10 @@ watch(km, async () => {
   }
 });
 async function getOccurrences() {
+  if (isRichardsSubject.value) {
+    await occurrencesStore.getOccurrencesByUser(parseInt(userid.value));
+    return;
+  }
   await occurrencesStore.getOccurrences(
     date.value,
     local.value,
@@ -48,10 +52,6 @@ async function getOccurrences() {
     parseInt(km.value),
     parseInt(userid.value)
   );
-}
-
-async function getOccurrencesByUser() {
-  await occurrencesStore.getOccurrencesByUser(parseInt(userid.value));
 }
 
 async function reset() {
@@ -64,7 +64,7 @@ async function reset() {
 </script>
 
 <template>
-  <v-form ref="form" @submit.prevent="isRichardsSubject ? getOccurrencesByUser : getOccurrences">
+  <v-form ref="form" @submit.prevent="getOccurrences">
     <v-row>
       <v-col cols="3"><v-label class="ma-5">Filtros</v-label>
       </v-col>
