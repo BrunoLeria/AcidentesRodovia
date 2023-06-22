@@ -64,10 +64,10 @@ export class OccurrencesController {
   async getOccurrencesByFilter(@Param() params: any): Promise<any> {
     const args = {};
     if (params.registered_at !== 'null') {
-      args['registered_at'] = params.registered_at;
+      args['registered_at'] = { $regex: params.registered_at };
     }
     if (params.local !== 'null') {
-      args['local'] = params.local;
+      args['local'] = { $regex: params.local };
     }
     if (params.occurrence_type !== 'null') {
       args['occurrence_type'] = params.occurrence_type;
