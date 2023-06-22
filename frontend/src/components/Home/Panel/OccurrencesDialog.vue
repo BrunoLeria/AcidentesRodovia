@@ -14,7 +14,7 @@ const props = defineProps({
     required: true,
   },
   variant: {
-    type: String,
+    type: String as () => "elevated" | "flat" | "text" | "tonal" | "outlined" | "plain",
     required: false,
     default: "elevated"
   },
