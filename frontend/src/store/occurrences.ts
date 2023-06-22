@@ -120,7 +120,8 @@ export const useOccurrenceStore = defineStore("occurrence", {
       date: string,
       local: string,
       occurrence_type: number,
-      km: number
+      km: number,
+      user_id: number
     ): Promise<boolean> {
       const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
@@ -134,6 +135,37 @@ export const useOccurrenceStore = defineStore("occurrence", {
       const result = await fetch(
         url +
           `/occurrences/?local=${local}&occurrence_type=${occurrence_type}&km=${km}`,
+        requestOptions
+      )
+        .then((response) => {
+          if (response.status === 404) {
+            alert("Nenhuma ocorrência encontrada");
+            return false;
+          }
+          return response.json();
+        })
+        .then((result) => {
+          if (!result) return false;
+          if (!result.hasOwnProperty("message")) {
+            this.$state.occurrences = result;
+          }
+          return !result.hasOwnProperty("message");
+        });
+      return result;
+    },
+
+    async getOccurrencesByUser(user_id: number): Promise<boolean> {
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+
+      const requestOptions: RequestInit = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow",
+      };
+
+      const result = await fetch(
+        url + `/occurrences/users/${user_id}`,
         requestOptions
       )
         .then((response) => {

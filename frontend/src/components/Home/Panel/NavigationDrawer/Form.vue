@@ -46,7 +46,12 @@ async function getOccurrences() {
     local.value,
     occurrenceType.indexOf(occurrence_type.value) + 1,
     parseInt(km.value),
+    parseInt(userid.value)
   );
+}
+
+async function getOccurrencesByUser() {
+  await occurrencesStore.getOccurrencesByUser(parseInt(userid.value));
 }
 
 async function reset() {
@@ -59,7 +64,7 @@ async function reset() {
 </script>
 
 <template>
-  <v-form ref="form" @submit.prevent="getOccurrences">
+  <v-form ref="form" @submit.prevent="isRichardsSubject ? getOccurrencesByUser : getOccurrences">
     <v-row>
       <v-col cols="3"><v-label class="ma-5">Filtros</v-label>
       </v-col>
