@@ -14,6 +14,8 @@ export class UsersExceptionFilter implements ExceptionFilter {
     const status = exception.getStatus();
     const message = exception.message;
 
+    console.warn(exception);
+
     if (status === 400) {
       return response.status(status).json({
         message: 'Campos inválidos',

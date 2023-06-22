@@ -33,6 +33,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       const isOwner = request?.params?.id === userId;
 
       if (!isOccurrence && !isOwner && !isLogout) {
+        console.warn('Usuário logado não é o dono do perfil a ser alterado');
         throw new UnauthorizedException(
           'Essas credenciais não correspondem aos nossos registros',
         );
@@ -41,17 +42,22 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       if (isOccurrence) {
         const body = request.body;
         if (body && body.user_id && body.user_id !== parseInt(userId)) {
+          console.warn('A ocorrência não pertence ao usuário informado');
           throw new UnauthorizedException(
             'Essas credenciais não correspondem aos nossos registros',
           );
         }
-        if (request.method === 'PUT' || request.method === 'DELETE') {
-          if (
-            !(await this.occurrencesService.checkOccurrenceOwner(
-              request?.params?.id,
-              userId,
-            ))
-          ) {
+        if (
+          (request.method === 'PUT' || request.method === 'DELETE') &&
+          !(await this.occurrencesService.checkOccurrenceOwner(
+            request?.params?.id,
+            userId,
+          ))
+        ) {
+          {
+            console.warn(
+              'Usuário não é dono da ocorrência para realizar a ação',
+            );
             throw new UnauthorizedException(
               'Essas credenciais não correspondem aos nossos registros',
             );
@@ -61,6 +67,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
       return await this.usersService.getUser({ id: parseInt(userId) });
     } catch (err) {
+      console.warn(err);
       throw new UnauthorizedException(
         'Essas credenciais não correspondem aos nossos registros',
       );

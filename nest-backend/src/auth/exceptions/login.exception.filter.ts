@@ -14,6 +14,8 @@ export class LoginExceptionFilter implements ExceptionFilter {
     const status = exception.getStatus();
     const message = exception.message;
 
+    console.warn(exception);
+
     if (status === 401 && message === 'Unauthorized') {
       return response.status(400).json({
         message: 'Campos inválidos',
