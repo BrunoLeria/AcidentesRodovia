@@ -117,9 +117,10 @@ export const useOccurrenceStore = defineStore("occurrence", {
       return result;
     },
     async getOccurrences(
+      date: string,
       local: string,
       occurrence_type: number,
-      km: string
+      km: number
     ): Promise<boolean> {
       const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
