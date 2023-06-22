@@ -81,7 +81,7 @@ export class OccurrencesService {
   async getOccurrence(getOccurrenceArgs: Partial<Occurrence>): Promise<any> {
     return this.occurrencesRepository.find(
       getOccurrenceArgs,
-      'id registered_at local occurrence_type km user_id',
+      'id registered_at local occurrence_type km user_id -_id',
     );
   }
   async checkOccurrenceOwner(id: string, user_id: string): Promise<boolean> {
