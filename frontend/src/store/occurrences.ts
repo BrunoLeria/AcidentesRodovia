@@ -157,6 +157,10 @@ export const useOccurrenceStore = defineStore("occurrence", {
     async getOccurrencesByUser(user_id: number): Promise<boolean> {
       const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
+      myHeaders.append(
+        "Authorization",
+        "Bearer " + localStorage.getItem("token") || "no token found"
+      );
 
       const requestOptions: RequestInit = {
         method: "GET",
