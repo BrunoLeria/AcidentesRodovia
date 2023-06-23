@@ -42,6 +42,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       if (isOccurrence) {
         const body = request.body;
         if (body && body.user_id && body.user_id !== parseInt(userId)) {
+          if (typeof body.user_id === 'string') {
+            console.warn('Usuário informado não é um número');
+            throw new UnauthorizedException('Dados inválidos');
+          }
           console.warn('A ocorrência não pertence ao usuário informado');
           throw new UnauthorizedException(
             'Essas credenciais não correspondem aos nossos registros',
