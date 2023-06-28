@@ -1,0 +1,606 @@
+{
+	"info": {
+		"_postman_id": "ddaf66b8-1073-4d75-b0e0-495f4a74f63d",
+		"name": "Acidentes alerta",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11849802"
+	},
+	"item": [
+		{
+			"name": "Register a user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let users = pm.collectionVariables.get(\"users\");\r",
+							"\r",
+							"if (!users || users.length == 0) {\r",
+							"    users = [{\r",
+							"          id: 1,\r",
+							"          email: \"michael.lawson@reqres.in\",\r",
+							"          name: \"Michael Lawson\",\r",
+							"          password: \"!!Xz%Y5VuN\",\r",
+							"        },\r",
+							"        {\r",
+							"          id: 2,\r",
+							"          email: \"lindsay.ferguson@reqres.in\",\r",
+							"          name: \"Lindsay Ferguson\",\r",
+							"          password: \"@58Dv7ym6M\",\r",
+							"        },\r",
+							"        {\r",
+							"          id: 3,\r",
+							"          email: \"tobias.funke@reqres.in\",\r",
+							"          name: \"Tobias Funke\",\r",
+							"          password: \"4pwAM5&tWo\",\r",
+							"        },\r",
+							"        {\r",
+							"          id: 4,\r",
+							"          email: \"byron.fields@reqres.in\",\r",
+							"          name: \"Byron Fields\",\r",
+							"          password: \"7$J63g^V2n\",\r",
+							"        },\r",
+							"        {\r",
+							"          id: 5,\r",
+							"          email: \"george.edwards@reqres.in\",\r",
+							"          name: \"George Edwards\",\r",
+							"          password: \"i2S$DHxATx\",\r",
+							"        }];\r",
+							"}\r",
+							"\r",
+							"let currentUser = users.shift();\r",
+							"pm.collectionVariables.set(\"currentUser\", currentUser);\r",
+							"pm.collectionVariables.set(\"username\", currentUser.name);\r",
+							"pm.collectionVariables.set(\"useremail\", currentUser.email);\r",
+							"pm.collectionVariables.set(\"userpassword\", currentUser.password);\r",
+							"pm.collectionVariables.set(\"users\", users);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const users = pm.collectionVariables.get(\"users\");\r",
+							"\r",
+							"if (users && users.length > 0) {\r",
+							"    postman.setNextRequest(\"Loop Post Parameter\");\r",
+							"} else {\r",
+							"    postman.setNextRequest(null);\r",
+							"}\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{username}}\",\r\n    \"email\": \"{{useremail}}\",\r\n    \"password\": \"{{userpassword}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/users",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get an user by id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzIiwiaWF0IjoxNjg2Nzk4NTgxLCJleHAiOjE2ODY4MDIxODF9.NnOC4xvOdAgwzGesN0I01R31WXwmNrg5lH7dQUr_Mls",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-token",
+						"value": "{{x-token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/users/:id",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login a user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"michael.lawson@reqres.in\",\r\n    \"password\": \"!!Xz%Y5VuN\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI4IiwiaWF0IjoxNjg0ODcxOTg2LCJleHAiOjE2ODQ4NzU1ODZ9.qU1O6-uOuHFhwvwkmF4lyKeRvBawxW4dM5iyrPvSnbg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/logout",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit a user",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzIiwiaWF0IjoxNjg2Nzk4NTgxLCJleHAiOjE2ODY4MDIxODF9.NnOC4xvOdAgwzGesN0I01R31WXwmNrg5lH7dQUr_Mls",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "x-token",
+						"value": "{{x-token}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Michael Tawson\",\r\n    \"email\": \"michael.lawson@reqres.in\",\r\n    \"password\": null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/users/:id",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a user",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2IiwiaWF0IjoxNjg2ODAwNzAzLCJleHAiOjE2ODY4MDQzMDN9.bPmxG5slBXbPnaSDpcgxVh6xCqXAKgUnYrh3ktjR19k",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NDAzMDJmODYyNDI2MjE3NGNjZGUwZiIsImlhdCI6MTY4MjAxMjc3MywiZXhwIjoxNjgyMDE2MzczfQ.-dWg1IKGolgmGyP9yLk0mYSi2pPHpOsyW-TLgkGCgLc",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/users/:id",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "6"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List occurrences",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/occurrences",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"occurrences"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List occurrences by user",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI3IiwiaWF0IjoxNjg0NjIyOTg1LCJleHAiOjE2ODQ2MjY1ODV9.9HNzPdV0CRX7w5uFtTzBqUi_dKA4ZOg8fJSPSBX8exE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/occurrences/users/:id",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"occurrences",
+						"users",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "7"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List occurrences by filter",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI3IiwiaWF0IjoxNjg0NjIyOTg1LCJleHAiOjE2ODQ2MjY1ODV9.9HNzPdV0CRX7w5uFtTzBqUi_dKA4ZOg8fJSPSBX8exE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-token",
+						"value": "{{x-token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/occurrences/filter/:registered_at/:local/:occurrence_type/:km/:user_id",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"occurrences",
+						"filter",
+						":registered_at",
+						":local",
+						":occurrence_type",
+						":km",
+						":user_id"
+					],
+					"variable": [
+						{
+							"key": "registered_at",
+							"value": "null",
+							"description": "Deixe null os campos que não queira filtrar"
+						},
+						{
+							"key": "local",
+							"value": "stringstring"
+						},
+						{
+							"key": "occurrence_type",
+							"value": "null"
+						},
+						{
+							"key": "km",
+							"value": "null"
+						},
+						{
+							"key": "user_id",
+							"value": "null"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add a new occurrences",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2IiwiaWF0IjoxNjg2ODExMjgwLCJleHAiOjE2ODY4MTQ4ODB9.q-UX93xnQPdKjmvF1Un_N3z6C4DK4cwwKdiNZKUBsdA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-token",
+						"value": "{{x-token}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"registered_at\": \"2023-06-15T05:05:10.000Z\",\r\n  \"local\": \"string\",\r\n  \"occurrence_type\": 1,\r\n  \"km\": 1000,\r\n  \"user_id\": 6\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/occurrences",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"occurrences"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit a occurrences",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2IiwiaWF0IjoxNjg2ODExMjgwLCJleHAiOjE2ODY4MTQ4ODB9.q-UX93xnQPdKjmvF1Un_N3z6C4DK4cwwKdiNZKUBsdA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "x-token",
+						"value": "{{x-token}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"registered_at\": \"2023-06-15T05:05:10.000Z\",\r\n  \"local\": \"stringstring\",\r\n  \"occurrence_type\": 1,\r\n  \"km\": 1000,\r\n  \"user_id\": 4\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/occurrences/:id",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"occurrences",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "4"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a occurrences",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2IiwiaWF0IjoxNjg2ODEyNDAyLCJleHAiOjE2ODY4MTYwMDJ9.H-lzZgGPdyZqiyTUSmD2ZTVCT-zjOX9T-5XzUdOkR3k",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-token",
+						"value": "{{x-token}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{url}}/occurrences/:id",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"occurrences",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "30"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "users",
+			"value": ""
+		},
+		{
+			"key": "username",
+			"value": ""
+		},
+		{
+			"key": "useremail",
+			"value": ""
+		},
+		{
+			"key": "userpassword",
+			"value": ""
+		},
+		{
+			"key": "currentUser",
+			"value": ""
+		},
+		{
+			"key": "x-token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "userid",
+			"value": ""
+		},
+		{
+			"key": "url",
+			"value": "http://localhost:22400"
+		}
+	]
+}
