@@ -2,6 +2,7 @@
 import { ref, watch } from "vue";
 import { occurrenceType } from "../../../../utils/TypeOfOccurrences";
 import { useOccurrenceStore } from "../../../../store/occurrences";
+import { useUserStore } from "../../../../store/users";
 import { getDate, getTime } from "@/utils/DateTimeTreatment";
 
 const props = defineProps({
@@ -9,6 +10,7 @@ const props = defineProps({
 });
 
 const occurrencesStore = useOccurrenceStore();
+const usersStore = useUserStore();
 const date = ref("");
 const local = ref("");
 const occurrence_type = ref("");
@@ -46,10 +48,15 @@ watch(userId, async () => {
     userId.value = "";
   }
 });
-async function getOccurrences() {
-  if (isRichardsSubject.value && userId.value !== "") {
-    await occurrencesStore.getOccurrencesByUser(parseInt(userId.value));
-    return;
+async function getOccurrences(cancelar = false) {
+  if (isRichardsSubject.value && !cancelar) {
+    if (usersStore.user === null) {
+      alert("Você precisa estar logado para filtrar ocorrências!");
+      return;
+    } else {
+      await occurrencesStore.getOccurrencesByUser(usersStore.user.id);
+      return;
+    }
   }
   const registered_at = date.value.length === 0 ? time.value : date.value + "T" + time.value;
   await occurrencesStore.getOccurrences(
@@ -68,20 +75,21 @@ async function reset() {
   occurrence_type.value = "";
   km.value = "";
   userId.value = "";
-  await getOccurrences();
+  await getOccurrences(true);
 }
 </script>
 
 <template>
-  <v-form ref="form" @submit.prevent="getOccurrences">
+  <v-form ref="form" @submit.prevent="getOccurrences()">
     <v-row>
       <v-col cols="3"><v-label class="ma-5">Filtros</v-label>
       </v-col>
       <v-col cols="9"><v-switch v-model="isRichardsSubject" label="Projeto Cliente-Servidor" inset></v-switch></v-col>
     </v-row>
     <v-divider></v-divider>
-    <v-label v-if="!props.rail" class="mx-5 mt-5">ID do usuário:</v-label>
-    <v-text-field v-if="!props.rail" clearable v-model="userId" variant="outlined" class="mx-5 mb-5" />
+    <v-label v-if="!props.rail && !isRichardsSubject" class="mx-5 mt-5">ID do usuário:</v-label>
+    <v-text-field v-if="!props.rail && !isRichardsSubject" clearable v-model="userId" variant="outlined"
+      class="mx-5 mb-5" />
     <v-label v-if="!props.rail && !isRichardsSubject" class="mx-5">Data do acidente:</v-label>
     <v-text-field v-if="!props.rail && !isRichardsSubject" clearable v-model="date" type="date" :max="getDate()" step="1"
       variant="outlined" class="mx-5 mb-5"></v-text-field>
@@ -102,7 +110,7 @@ async function reset() {
           <v-btn color="primary" type="submit" class="mx-5 mb-5">Filtrar</v-btn>
         </v-col>
         <v-col cols="8">
-          <v-btn color="error" class="mx-5 mb-5" @click="reset">Cancelar</v-btn>
+          <v-btn color="error" class="mx-5 mb-5" @click.prevent="reset">Cancelar</v-btn>
         </v-col>
       </v-row>
     </v-container>
