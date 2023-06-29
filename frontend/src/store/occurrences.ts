@@ -188,6 +188,11 @@ export const useOccurrenceStore = defineStore("occurrence", {
             alert("Nenhuma ocorrência encontrada");
             return false;
           }
+          if (response.status === 401) {
+            alert("Sessão expirada, faça login novamente");
+            localStorage.setItem("token", "");
+            window.location.href = "/login";
+          }
           return response.json();
         })
         .then((result) => {
