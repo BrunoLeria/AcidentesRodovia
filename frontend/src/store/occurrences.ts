@@ -100,6 +100,9 @@ export const useOccurrenceStore = defineStore("occurrence", {
             window.location.href = "/login";
             return false;
           }
+          if (response.status === 200) {
+            location.reload();
+          }
           return response.json();
         })
         .then((result) => {
@@ -225,6 +228,11 @@ export const useOccurrenceStore = defineStore("occurrence", {
             window.location.href = "/login";
             return false;
           }
+          if (response.status === 200) {
+            alert("Ocorrência excluida com sucesso");
+            location.reload();
+          }
+
           return response.json();
         })
         .then((result) => {
