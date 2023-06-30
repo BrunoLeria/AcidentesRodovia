@@ -9,7 +9,7 @@ const rail = ref(true);
 <template>
 	<v-navigation-drawer v-model="drawer" :rail="rail" permanent @click="rail = false">
 		<v-list density="compact" nav>
-			<v-list-item prepend-icon="mdi-magnify" title="Search">
+			<v-list-item prepend-icon="mdi-magnify" title="Filtrar">
 				<template v-slot:append>
 					<v-btn variant="text" icon="mdi-chevron-left" @click.stop="rail = !rail"></v-btn>
 				</template>

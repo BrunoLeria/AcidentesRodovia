@@ -81,29 +81,26 @@ async function reset() {
 
 <template>
   <v-form ref="form" @submit.prevent="getOccurrences()">
-    <v-row>
-      <v-col cols="3"><v-label class="ma-5">Filtros</v-label>
-      </v-col>
-      <v-col cols="9"><v-switch v-model="isRichardsSubject" label="Projeto Cliente-Servidor" inset></v-switch></v-col>
-    </v-row>
+    <v-container>
+      <v-switch v-model="isRichardsSubject" label="Projeto Cliente-Servidor" inset></v-switch>
+    </v-container>
     <v-divider></v-divider>
-    <v-label v-if="!props.rail && !isRichardsSubject" class="mx-5 mt-5">ID do usuário:</v-label>
-    <v-text-field v-if="!props.rail && !isRichardsSubject" clearable v-model="userId" variant="outlined"
-      class="mx-5 mb-5" />
-    <v-label v-if="!props.rail && !isRichardsSubject" class="mx-5">Data do acidente:</v-label>
-    <v-text-field v-if="!props.rail && !isRichardsSubject" clearable v-model="date" type="date" :max="getDate()" step="1"
-      variant="outlined" class="mx-5 mb-5"></v-text-field>
-    <v-label v-if="!props.rail && !isRichardsSubject" class="mx-5">Hora do acidente:</v-label>
-    <v-text-field v-if="!props.rail && !isRichardsSubject" clearable v-model="time" type="time"
-      :max="date === getDate() ? getTime() : ''" suffix="BRT" variant="outlined" class="mx-5 mb-5"></v-text-field>
-    <v-label v-if="!props.rail && !isRichardsSubject" class="mx-5">Local:</v-label>
-    <v-text-field v-if="!props.rail && !isRichardsSubject" clearable v-model="local" variant="outlined"
-      class="mx-5 mb-5" />
-    <v-label v-if="!props.rail && !isRichardsSubject" class="mx-5">Tipo do incidente:</v-label>
-    <v-combobox v-if="!props.rail && !isRichardsSubject" clearable v-model="occurrence_type" :items="occurrenceType"
-      variant="outlined" class="mx-5 mb-5" />
-    <v-label v-if="!props.rail && !isRichardsSubject" class="mx-5">KM:</v-label>
-    <v-text-field v-if="!props.rail && !isRichardsSubject" clearable v-model="km" variant="outlined" class="mx-5 mb-5" />
+    <v-container v-if="!props.rail && !isRichardsSubject">
+      <v-label class="mx-5 mt-5">ID do usuário:</v-label>
+      <v-text-field clearable v-model="userId" variant="outlined" class="mx-5 mb-2" />
+      <v-label class="mx-5">Data do acidente:</v-label>
+      <v-text-field clearable v-model="date" type="date" :max="getDate()" step="1" variant="outlined"
+        class="mx-5 mb-2"></v-text-field>
+      <v-label class="mx-5">Hora do acidente:</v-label>
+      <v-text-field clearable v-model="time" type="time" :max="getTime()" suffix="BRT" variant="outlined"
+        class="mx-5 mb-2"></v-text-field>
+      <v-label class="mx-5">Local:</v-label>
+      <v-text-field clearable v-model="local" variant="outlined" class="mx-5 mb-2" />
+      <v-label class="mx-5">Tipo do incidente:</v-label>
+      <v-combobox clearable v-model="occurrence_type" :items="occurrenceType" variant="outlined" class="mx-5 mb-2" />
+      <v-label class="mx-5">KM:</v-label>
+      <v-text-field clearable v-model="km" variant="outlined" class="mx-5 mb-2" />
+    </v-container>
     <v-container>
       <v-row>
         <v-col cols="4" class="px-0 ">
