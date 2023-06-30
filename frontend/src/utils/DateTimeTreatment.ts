@@ -46,28 +46,28 @@ export function getDateFull(date?: Date) {
 
 export function getDate(date?: string) {
   const DATE = new Date(date || Date.now());
-  const DAY = DATE.getUTCDate().toString().padStart(2, "0");
-  const MONTH = (DATE.getUTCMonth() + 1).toString().padStart(2, "0");
+  const DAY = DATE.getDate().toString().padStart(2, "0");
+  const MONTH = (DATE.getMonth() + 1).toString().padStart(2, "0");
   const CURRENT_DATE = `${DATE.getFullYear()}-${MONTH}-${DAY}`;
   return CURRENT_DATE;
 }
 
 export function getTime(date?: string) {
   const DATE = new Date(date || Date.now());
-  const HOUR = DATE.getUTCHours().toString().padStart(2, "0");
-  const MINUTES = DATE.getUTCMinutes().toString().padStart(2, "0");
+  const HOUR = DATE.getHours().toString().padStart(2, "0");
+  const MINUTES = DATE.getMinutes().toString().padStart(2, "0");
   const CURRENT_TIME = `${HOUR}:${MINUTES}`;
   return CURRENT_TIME;
 }
 
 export function isoToBrazilianDate(isoDate: string): string {
   const date = new Date(isoDate);
-  const day = date.getUTCDate().toString().padStart(2, "0");
-  const month = (date.getUTCMonth() + 1).toString().padStart(2, "0");
-  const year = date.getUTCFullYear().toString();
-  const hours = date.getUTCHours().toString().padStart(2, "0");
-  const minutes = date.getUTCMinutes().toString().padStart(2, "0");
-  const seconds = date.getUTCSeconds().toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear().toString();
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  const seconds = date.getSeconds().toString().padStart(2, "0");
   return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 }
 

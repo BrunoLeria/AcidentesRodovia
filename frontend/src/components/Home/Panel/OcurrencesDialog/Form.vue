@@ -21,7 +21,7 @@ const local = ref("");
 const occurrence_type = ref("");
 const km = ref("");
 const date = ref(getDate());
-const time = ref("12:30");
+const time = ref(getTime());
 
 if (props.occurrence) {
   local.value = props.occurrence.local;
