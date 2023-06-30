@@ -31,19 +31,38 @@ const deleteOccurrence = async () => {
 <template>
     <v-card :color="props.color" theme="dark" max-width="400" class="py-5 px-2">
         <v-card-title class="text-h6 py-5 flex flex-column justify-space-between">
-            <v-row align-content="space-between">
-                <v-col cols="7">
-                    {{ props.occurrence.local }}
-                </v-col>
-                <v-col cols="2" v-show="showOptions">
-                    <occurrences-dialog :occurrence="props.occurrence" variant="text" icon="mdi-pencil"
-                        title="Editar sua ocorrência" />
-                </v-col>
-                <v-col cols="3" v-show="showOptions">
-                    <confirm-dialog :function="deleteOccurrence" text="Deseja excluir a ocorrência?" icon="mdi-delete"
-                        variant="text" />
-                </v-col>
-            </v-row>
+            <v-container class="d-none d-sm-none d-md-none d-lg-flex">
+                <v-row align-content="space-between">
+                    <v-col cols="7">
+                        {{ props.occurrence.local }}
+                    </v-col>
+                    <v-col cols="2" v-show="showOptions">
+                        <occurrences-dialog :occurrence="props.occurrence" variant="text" icon="mdi-pencil"
+                            title="Editar sua ocorrência" />
+                    </v-col>
+                    <v-col cols="3" v-show="showOptions">
+                        <confirm-dialog :function="deleteOccurrence" text="Deseja excluir a ocorrência?" icon="mdi-delete"
+                            variant="text" />
+                    </v-col>
+                </v-row>
+            </v-container>
+            <v-container class="d-lg-none">
+                <v-row align-content="space-between">
+                    <v-col>
+                        {{ props.occurrence.local }}
+                    </v-col>
+                </v-row>
+                <v-row align-content="space-between">
+                    <v-col cols="6" v-show="showOptions">
+                        <occurrences-dialog :occurrence="props.occurrence" variant="text" icon="mdi-pencil"
+                            title="Editar sua ocorrência" />
+                    </v-col>
+                    <v-col cols="6" v-show="showOptions">
+                        <confirm-dialog :function="deleteOccurrence" text="Deseja excluir a ocorrência?" icon="mdi-delete"
+                            variant="text" />
+                    </v-col>
+                </v-row>
+            </v-container>
         </v-card-title>
         <v-card-subtitle class="text-h6 py-2">
             Km: {{ props.occurrence.km }}
