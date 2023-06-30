@@ -47,7 +47,7 @@ export class UsersService {
     try {
       const user = await this.usersRepository.findOne(
         {
-          email: updateUserDto.email,
+          id: id,
         },
         '-_id id',
       );

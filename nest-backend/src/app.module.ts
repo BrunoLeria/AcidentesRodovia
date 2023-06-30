@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { OccurrencesModule } from './occurrences/occurrences.module';
 import * as Joi from 'joi';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -18,6 +19,10 @@ import * as Joi from 'joi';
         JWT_SECRET: Joi.string().required(),
       }),
       envFilePath: './.env',
+    }),
+    ThrottlerModule.forRoot({
+      ttl: 2,
+      limit: 20,
     }),
     DatabaseModule,
     UsersModule,

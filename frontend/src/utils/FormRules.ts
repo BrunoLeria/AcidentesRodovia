@@ -9,7 +9,7 @@ export const emailRules = [
 ];
 export const passwordRules = [
   (v: string) => !!v || "Password is required",
-  (v: string) => v.length >= 8 || "Min 8 characters",
+  (v: string) => v.length >= 2 || "Min 2 characters",
 ];
 export const kmRules = [
   (v: string) => !!v || "Km is required",

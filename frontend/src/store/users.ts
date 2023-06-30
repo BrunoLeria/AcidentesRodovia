@@ -173,10 +173,17 @@ export const useUserStore = defineStore("user", {
 
       const result = await fetch(url + `/users/${this.user.id}`, requestOptions)
         .then((response) => {
+          if (response.status === 200) {
+            alert("Usuário excluido com sucesso");
+            logout();
+            window.location.href = "/";
+          }
           return response.json();
         })
         .then((result) => {
-          alert(result.message);
+          if (result.hasOwnProperty("message")) {
+            alert(result.message);
+          }
           return (
             result.hasOwnProperty("message") &&
             result.message === "Usuário excluido com sucesso"
